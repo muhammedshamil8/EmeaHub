@@ -11,6 +11,18 @@ const navigation = [
     { name: 'Leaderboard', href: '/leaderboard', public: true },
     { name: 'Achievements', href: '/achievements', public: true },
     { name: 'About', href: '/about', public: true },
+
+     { 
+        name: 'AI Assistant', 
+        href: '/ai/chat',
+        // children: [
+        //     { name: 'AI Chat', href: '/ai/chat' },
+        //     { name: 'Smart Search', href: '/ai/search' },
+        //     { name: 'Study Planner', href: '/ai/planner' },
+        //     { name: 'Chat History', href: '/ai/history' },
+        // ],
+        public: true
+    },
 ];
 
 const userNavigation = [
