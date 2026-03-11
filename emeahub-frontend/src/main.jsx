@@ -6,6 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { router } from './router';
 import './styles/globals.css';
+import './index.css';
 
 const queryClient = new QueryClient({
     defaultOptions: {

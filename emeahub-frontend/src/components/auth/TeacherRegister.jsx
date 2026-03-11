@@ -59,8 +59,8 @@ export default function TeacherRegister() {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+        <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary-50 via-white to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+            <div className="max-w-md w-full space-y-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700/50">
                 <div>
                     <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white">
                         Teacher Registration
@@ -80,7 +80,7 @@ export default function TeacherRegister() {
                             <input
                                 {...register('name')}
                                 type="text"
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 placeholder="Dr. John Doe"
                             />
                             {errors.name && (
@@ -96,7 +96,7 @@ export default function TeacherRegister() {
                             <input
                                 {...register('email')}
                                 type="email"
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 placeholder="teacher@example.com"
                             />
                             {errors.email && (
@@ -111,7 +111,7 @@ export default function TeacherRegister() {
                             </label>
                             <select
                                 {...register('department_id')}
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             >
                                 <option value="">Select Department</option>
                                 {departments.map(dept => (
@@ -135,7 +135,7 @@ export default function TeacherRegister() {
                             <input
                                 {...register('qualification')}
                                 type="text"
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 placeholder="M.Tech, Ph.D, etc."
                             />
                             {errors.qualification && (
@@ -155,7 +155,7 @@ export default function TeacherRegister() {
                                 type="number"
                                 min="0"
                                 step="1"
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 placeholder="5"
                             />
                             {errors.experience && (
@@ -173,7 +173,7 @@ export default function TeacherRegister() {
                             <input
                                 {...register('password')}
                                 type="password"
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 placeholder="••••••••"
                             />
                             {errors.password && (
@@ -189,7 +189,7 @@ export default function TeacherRegister() {
                             <input
                                 {...register('password_confirmation')}
                                 type="password"
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 placeholder="••••••••"
                             />
                             {errors.password_confirmation && (
@@ -212,7 +212,7 @@ export default function TeacherRegister() {
                     <button
                         type="submit"
                         disabled={submitting}
-                        className="btn-primary w-full flex justify-center items-center"
+                        className="w-full inline-flex justify-center items-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {submitting ? <LoadingSpinner size="sm" /> : 'Register as Teacher'}
                     </button>
@@ -221,13 +221,13 @@ export default function TeacherRegister() {
                     <div className="text-center">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             Already have an account?{' '}
-                            <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
+                            <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
                                 Sign in
                             </Link>
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                             Are you a student?{' '}
-                            <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500">
+                            <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
                                 Register here
                             </Link>
                         </p>

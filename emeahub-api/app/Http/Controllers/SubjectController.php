@@ -47,4 +47,27 @@ class SubjectController extends Controller
             'modules' => $modules
         ]);
     }
+
+  public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'code' => 'required|string|max:50',
+        'department_id' => 'required|exists:departments,id',
+        'semester' => 'required|integer|min:1|max:8'
+    ]);
+
+    $subject = Subject::create([
+        'name' => $request->name,
+        'code' => $request->code,
+        'department_id' => $request->department_id,
+        'semester' => $request->semester,
+        'is_active' => true
+    ]);
+
+    return response()->json([
+        'success' => true,
+        'subject' => $subject
+    ]);
+}
 }

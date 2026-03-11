@@ -75,7 +75,7 @@ export default function PendingVerifications() {
             </h1>
 
             {pending.length === 0 ? (
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-12 text-center shadow-lg border border-gray-100 dark:border-gray-700">
                     <CheckIcon className="h-16 w-16 mx-auto text-green-500 mb-4" />
                     <p className="text-xl text-gray-900 dark:text-white mb-2">
                         All caught up!
@@ -89,7 +89,7 @@ export default function PendingVerifications() {
                     {pending.map((resource) => (
                         <div
                             key={resource.id}
-                            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+                            className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700/50 hover:shadow-xl transition-all duration-300"
                         >
                             <div className="flex justify-between items-start">
                                 <div className="flex-1">
@@ -164,7 +164,7 @@ export default function PendingVerifications() {
             {/* Reject Modal */}
             {showRejectModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-200 dark:border-gray-700">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                             Reject Resource
                         </h3>
@@ -174,7 +174,7 @@ export default function PendingVerifications() {
                         <textarea
                             value={rejectionReason}
                             onChange={(e) => setRejectionReason(e.target.value)}
-                            className="input-field w-full mb-4"
+                            className="w-full mb-4 px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             rows="4"
                             placeholder="e.g., Poor quality, incomplete content, wrong subject..."
                         />
@@ -182,7 +182,7 @@ export default function PendingVerifications() {
                             <button
                                 onClick={handleReject}
                                 disabled={processing}
-                                className="btn-primary flex-1"
+                                className="flex-1 inline-flex justify-center items-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                             >
                                 {processing ? 'Rejecting...' : 'Reject'}
                             </button>
@@ -192,7 +192,7 @@ export default function PendingVerifications() {
                                     setRejectionReason('');
                                     setSelectedResource(null);
                                 }}
-                                className="btn-secondary flex-1"
+                                className="flex-1 inline-flex justify-center items-center px-4 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-xl shadow-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                             >
                                 Cancel
                             </button>

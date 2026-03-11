@@ -134,7 +134,7 @@ export default function TimetableManager() {
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
                     Manage Timetable
                 </h1>
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -143,7 +143,7 @@ export default function TimetableManager() {
                             <select
                                 value={selectedDept}
                                 onChange={(e) => setSelectedDept(e.target.value)}
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             >
                                 <option value="">Select Department</option>
                                 {departments.map(dept => (
@@ -158,7 +158,7 @@ export default function TimetableManager() {
                             <select
                                 value={selectedSem}
                                 onChange={(e) => setSelectedSem(e.target.value)}
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             >
                                 <option value="">Select Semester</option>
                                 {[1,2,3,4,5,6,7,8].map(sem => (
@@ -183,13 +183,13 @@ export default function TimetableManager() {
                 <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="btn-primary"
+                    className="inline-flex justify-center items-center px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                 >
                     {saving ? 'Saving...' : 'Save Timetable'}
                 </button>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                         <thead className="bg-gray-50 dark:bg-gray-900">
@@ -221,7 +221,7 @@ export default function TimetableManager() {
                                                         <select
                                                             value={entry.subject_id}
                                                             onChange={(e) => handleEntryChange(index, 'subject_id', e.target.value)}
-                                                            className="input-field text-sm"
+                                                            className="w-full px-3 py-2 text-sm bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                                         >
                                                             <option value="">Select Subject</option>
                                                             {subjects.map(subj => (
@@ -235,7 +235,7 @@ export default function TimetableManager() {
                                                             value={entry.room}
                                                             onChange={(e) => handleEntryChange(index, 'room', e.target.value)}
                                                             placeholder="Room"
-                                                            className="input-field text-sm"
+                                                            className="w-full px-3 py-2 text-sm bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                                         />
                                                     </div>
                                                 )}

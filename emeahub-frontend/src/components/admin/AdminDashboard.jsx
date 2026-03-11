@@ -91,7 +91,7 @@ export default function AdminDashboard() {
                     <Link
                         key={card.title}
                         to={card.link}
-                        className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 hover:shadow-lg transition-shadow"
+                        className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
                     >
                         <div className="flex items-center justify-between">
                             <div>
@@ -113,7 +113,7 @@ export default function AdminDashboard() {
             {/* Recent Activity */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* New Users */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                         New Users
                     </h2>
@@ -140,7 +140,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* New Resources */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                     <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                         New Resources
                     </h2>
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <Link
                     to="/admin/users"
-                    className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow flex items-center space-x-3 hover:shadow-lg transition-shadow"
+                    className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border border-gray-100 dark:border-gray-700 flex items-center space-x-3 hover:shadow-md hover:-translate-y-1 transition-all duration-300"
                 >
                     <UsersIcon className="h-6 w-6 text-primary-600" />
                     <span className="font-medium text-gray-900 dark:text-white">
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
                 </Link>
                 <Link
                     to="/admin/resources"
-                    className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow flex items-center space-x-3 hover:shadow-lg transition-shadow"
+                    className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border border-gray-100 dark:border-gray-700 flex items-center space-x-3 hover:shadow-md hover:-translate-y-1 transition-all duration-300"
                 >
                     <DocumentTextIcon className="h-6 w-6 text-primary-600" />
                     <span className="font-medium text-gray-900 dark:text-white">
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
                 </Link>
                 <Link
                     to="/admin/departments"
-                    className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow flex items-center space-x-3 hover:shadow-lg transition-shadow"
+                    className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border border-gray-100 dark:border-gray-700 flex items-center space-x-3 hover:shadow-md hover:-translate-y-1 transition-all duration-300"
                 >
                     <BuildingOfficeIcon className="h-6 w-6 text-primary-600" />
                     <span className="font-medium text-gray-900 dark:text-white">
@@ -199,7 +199,7 @@ export default function AdminDashboard() {
                 </Link>
                 <Link
                     to="/admin/reports"
-                    className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow flex items-center space-x-3 hover:shadow-lg transition-shadow"
+                    className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow border border-gray-100 dark:border-gray-700 flex items-center space-x-3 hover:shadow-md hover:-translate-y-1 transition-all duration-300"
                 >
                     <DocumentTextIcon className="h-6 w-6 text-primary-600" />
                     <span className="font-medium text-gray-900 dark:text-white">

@@ -83,11 +83,11 @@ export default function BrowseResources() {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0 mb-8">
+                <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 drop-shadow-sm">
                     Browse Resources
                 </h1>
-                <p className="text-gray-600 dark:text-gray-400">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-full">
                     Total: {pagination.total} resources
                 </p>
             </div>
@@ -107,11 +107,11 @@ export default function BrowseResources() {
                     
                     {/* Pagination */}
                     {pagination.lastPage > 1 && (
-                        <div className="flex justify-center space-x-2 mt-8">
+                        <div className="flex justify-center flex-wrap gap-2 mt-12 pb-8">
                             <button
                                 onClick={() => handlePageChange(page - 1)}
                                 disabled={page === 1}
-                                className="px-4 py-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                className="px-5 py-2.5 border border-gray-200 dark:border-gray-700/50 rounded-xl font-medium text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 bg-white dark:bg-gray-900 shadow-sm disabled:hover:bg-white dark:disabled:hover:bg-gray-900"
                             >
                                 Previous
                             </button>
@@ -119,10 +119,10 @@ export default function BrowseResources() {
                                 <button
                                     key={i + 1}
                                     onClick={() => handlePageChange(i + 1)}
-                                    className={`px-4 py-2 border rounded-lg ${
+                                    className={`px-5 py-2.5 border rounded-xl font-medium transition-all duration-300 shadow-sm ${
                                         page === i + 1 
-                                            ? 'bg-primary-600 text-white' 
-                                            : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                                            ? 'bg-gradient-to-r from-primary-600 to-primary-500 text-white border-transparent' 
+                                            : 'border-gray-200 dark:border-gray-700/50 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 bg-white dark:bg-gray-900'
                                     }`}
                                 >
                                     {i + 1}
@@ -131,7 +131,7 @@ export default function BrowseResources() {
                             <button
                                 onClick={() => handlePageChange(page + 1)}
                                 disabled={page === pagination.lastPage}
-                                className="px-4 py-2 border rounded-lg disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                className="px-5 py-2.5 border border-gray-200 dark:border-gray-700/50 rounded-xl font-medium text-gray-700 dark:text-gray-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 bg-white dark:bg-gray-900 shadow-sm disabled:hover:bg-white dark:disabled:hover:bg-gray-900"
                             >
                                 Next
                             </button>

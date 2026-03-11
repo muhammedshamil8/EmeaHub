@@ -34,6 +34,7 @@ Route::prefix('v1')->group(function () {
     // Subject routes
     Route::get('/subjects/by-department', [SubjectController::class, 'getByDepartment']);
     Route::get('/subjects/{subjectId}/modules', [SubjectController::class, 'getModules']);
+    Route::post('/subjects/add', [SubjectController::class, 'store']);
 
     // Resource routes (public)
     Route::get('/resources', [ResourceController::class, 'publicIndex']);

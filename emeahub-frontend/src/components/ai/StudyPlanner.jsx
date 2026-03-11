@@ -81,11 +81,11 @@ export default function StudyPlanner() {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                        <label className="input-label">Select Subject</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Select Subject</label>
                         <select
                             value={formData.subject_id}
                             onChange={(e) => setFormData({...formData, subject_id: e.target.value})}
-                            className="input-field"
+                            className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                         >
                             <option value="">Choose a subject</option>
                             {subjects.map(subject => (
@@ -97,7 +97,7 @@ export default function StudyPlanner() {
                     </div>
 
                     <div>
-                        <label className="input-label">Hours per Day</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Hours per Day</label>
                         <div className="relative">
                             <ClockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                             <input
@@ -106,20 +106,20 @@ export default function StudyPlanner() {
                                 max="8"
                                 value={formData.hours_per_day}
                                 onChange={(e) => setFormData({...formData, hours_per_day: parseInt(e.target.value)})}
-                                className="input-field pl-10"
+                                className="w-full px-4 py-3 pl-10 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="input-label">Exam Date</label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Exam Date</label>
                         <div className="relative">
                             <CalendarIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                             <input
                                 type="date"
                                 value={formData.exam_date}
                                 onChange={(e) => setFormData({...formData, exam_date: e.target.value})}
-                                className="input-field pl-10"
+                                className="w-full px-4 py-3 pl-10 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 min={new Date().toISOString().split('T')[0]}
                             />
                         </div>
@@ -129,7 +129,7 @@ export default function StudyPlanner() {
                 <button
                     onClick={handleGenerate}
                     disabled={generating}
-                    className="btn-primary w-full mt-4"
+                    className="w-full mt-4 inline-flex justify-center items-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {generating ? <LoadingSpinner size="sm" /> : 'Generate Study Plan'}
                 </button>

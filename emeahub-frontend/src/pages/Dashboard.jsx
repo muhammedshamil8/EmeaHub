@@ -77,13 +77,16 @@ export default function Dashboard() {
     return (
         <div className="space-y-6">
             {/* Welcome Header */}
-            <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-lg p-6 text-white">
-                <h1 className="text-2xl font-bold mb-2">
-                    Welcome back, {user?.name}!
-                </h1>
-                <p className="opacity-90">
-                    Here's what's happening with your account today.
-                </p>
+            <div className="bg-gradient-to-br from-primary-600 via-primary-500 to-purple-600 rounded-3xl p-8 md:p-10 text-white shadow-xl shadow-primary-500/20 relative overflow-hidden backdrop-blur-lg">
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/20 via-white/5 to-transparent"></div>
+                <div className="relative z-10">
+                    <h1 className="text-3xl md:text-4xl font-extrabold mb-3 tracking-tight">
+                        Welcome back, {user?.name}!
+                    </h1>
+                    <p className="text-lg text-primary-50 font-medium max-w-2xl">
+                        Here's what's happening with your account today.
+                    </p>
+                </div>
             </div>
 
             {/* User Stats */}
@@ -95,15 +98,15 @@ export default function Dashboard() {
                     <Link
                         key={action.title}
                         to={action.link}
-                        className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:shadow-lg transition-shadow"
+                        className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
                     >
-                        <div className={`inline-flex p-3 rounded-lg ${action.color} mb-4`}>
+                        <div className={`inline-flex p-4 rounded-xl ${action.color} mb-5 shadow-inner group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
                             <action.icon className="h-6 w-6" />
                         </div>
-                        <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                             {action.title}
                         </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">
                             {action.description}
                         </p>
                     </Link>
@@ -113,8 +116,8 @@ export default function Dashboard() {
             {/* Recent Activity Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Recent Uploads */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-100 dark:border-gray-700 shadow-xl">
+                    <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center">
                         Recent Uploads
                     </h2>
                     {recentUploads.length > 0 ? (
@@ -123,11 +126,11 @@ export default function Dashboard() {
                                 <Link
                                     key={upload.id}
                                     to={`/resources/${upload.id}`}
-                                    className="block p-3 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                    className="block p-4 border border-gray-100 dark:border-gray-700/50 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-300 group"
                                 >
                                     <div className="flex justify-between items-start">
                                         <div>
-                                            <h3 className="font-medium text-gray-900 dark:text-white">
+                                            <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                                                 {upload.title}
                                             </h3>
                                             <p className="text-sm text-gray-500">
@@ -159,8 +162,8 @@ export default function Dashboard() {
                 </div>
 
                 {/* Recent Activity */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                    <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 border border-gray-100 dark:border-gray-700 shadow-xl">
+                    <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center">
                         Recent Activity
                     </h2>
                     {recentActivity.length > 0 ? (
@@ -168,7 +171,7 @@ export default function Dashboard() {
                             {recentActivity.map((activity, index) => (
                                 <div
                                     key={index}
-                                    className="flex items-center justify-between p-3 border border-gray-200 dark:border-gray-700 rounded-lg"
+                                    className="flex items-center justify-between p-4 border border-gray-100 dark:border-gray-700/50 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300"
                                 >
                                     <div>
                                         <p className="font-medium text-gray-900 dark:text-white">

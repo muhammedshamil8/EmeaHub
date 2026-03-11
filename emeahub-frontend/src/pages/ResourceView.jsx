@@ -99,28 +99,28 @@ export default function ResourceView() {
     return (
         <div className="max-w-4xl mx-auto space-y-6">
             {/* Resource Header */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8">
                 <div className="flex items-start justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
                             {resource.title}
                         </h1>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                            <span className="badge badge-info">{resource.type}</span>
-                            <span className="badge badge-success">Semester {resource.semester}</span>
-                            <span className="badge badge-warning">{resource.subject}</span>
+                        <div className="flex flex-wrap gap-2 mb-6">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300 tracking-wide border border-blue-200 dark:border-blue-800">{resource.type}</span>
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 tracking-wide border border-emerald-200 dark:border-emerald-800">Semester {resource.semester}</span>
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 tracking-wide border border-amber-200 dark:border-amber-800">{resource.subject}</span>
                         </div>
                     </div>
                     <button
                         onClick={handleDownload}
-                        className="btn-primary flex items-center space-x-2"
+                        className="inline-flex justify-center items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none space-x-2"
                     >
                         <ArrowDownTrayIcon className="h-5 w-5" />
                         <span>Download</span>
                     </button>
                 </div>
 
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
                     {resource.description}
                 </p>
 
@@ -157,8 +157,8 @@ export default function ResourceView() {
                 </div>
 
                 {/* Uploader Info */}
-                <div className="flex items-center justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <div className="flex items-center space-x-4">
+                <div className="flex items-center justify-between pt-6 mt-4 border-t border-gray-100 dark:border-gray-700/50">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-6 w-full">
                         <div className="flex items-center space-x-2">
                             <UserIcon className="h-5 w-5 text-gray-400" />
                             <span className="text-gray-600 dark:text-gray-400">
@@ -176,8 +176,8 @@ export default function ResourceView() {
             </div>
 
             {/* Rating Section */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8">
+                <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
                     Rate this Resource
                 </h2>
                 
@@ -204,7 +204,7 @@ export default function ResourceView() {
                     value={review}
                     onChange={(e) => setReview(e.target.value)}
                     placeholder="Write your review (optional)..."
-                    className="input-field w-full mb-4"
+                    className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400 mb-6 resize-none"
                     rows="3"
                     disabled={submitting}
                 />
@@ -212,7 +212,7 @@ export default function ResourceView() {
                 <button
                     onClick={handleReviewSubmit}
                     disabled={submitting || !userRating}
-                    className="btn-primary"
+                    className="inline-flex justify-center items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     {submitting ? 'Submitting...' : 'Submit Review'}
                 </button>
@@ -220,8 +220,8 @@ export default function ResourceView() {
 
             {/* Related Resources */}
             {resource.related && resource.related.length > 0 && (
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-8">
+                    <h2 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
                         Related Resources
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -229,12 +229,12 @@ export default function ResourceView() {
                             <Link
                                 key={related.id}
                                 to={`/resources/${related.id}`}
-                                className="p-4 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                className="p-5 border border-gray-100 dark:border-gray-700/50 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-300 group"
                             >
-                                <h3 className="font-semibold text-gray-900 dark:text-white mb-1">
+                                <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                                     {related.title}
                                 </h3>
-                                <p className="text-sm text-gray-500">{related.type}</p>
+                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{related.type}</p>
                             </Link>
                         ))}
                     </div>

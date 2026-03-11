@@ -171,11 +171,11 @@ After running seeders, you can login with:
 
 ## 🔐 Demo Accounts
 
-| Role    | Email                  | Password      |
-|---------|------------------------|---------------|
-| Admin   | admin@emeahub.com      | password      |
-| Teacher | teacher@test.com       | password123   |
-| Student | student@test.com       | password123   |
+| Role    | Email                  | Password     |
+|---------|------------------------|--------------|
+| Admin   | admin@emeahub.com      | password     |
+| Teacher | teacher@@emeahub.com   | password     |
+| Student | student@emeahub.com    | password     |
 
 ---
 
@@ -468,7 +468,7 @@ npm run test
 
 ## 📊 Database Schema
 
-![Database Schema](https://via.placeholder.com/800x600?text=Database+Schema)
+![Database Schema](https://www.onetab.ai/wp-content/uploads/2025/08/What-is-a-Database-Schema-Understanding-Its-Role-in-Database-Design.png)
 
 ---
 

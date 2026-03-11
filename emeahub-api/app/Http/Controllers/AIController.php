@@ -175,7 +175,7 @@ class AIController extends Controller
      */
     private function callGemini($prompt)
     {
-        $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={$this->apiKey}", [
+        $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$this->apiKey}", [
             'contents' => [
                 [
                     'parts' => [
@@ -226,14 +226,14 @@ class AIController extends Controller
     private function getUserRecentTopics($user)
     {
         return $user->downloads()
-            ->with('resource.subject')
-            ->latest()
-            ->take(5)
-            ->get()
-            ->pluck('resource.subject.name')
-            ->filter()
-            ->unique()
-            ->values();
+            ->with('resource.subject');
+            // ->latest()
+            // ->take(5)
+            // ->get()
+            // ->pluck('resource.subject.name')
+            // ->filter()
+            // ->unique()
+            // ->values();
     }
 
     /**

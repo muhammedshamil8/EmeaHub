@@ -85,7 +85,7 @@ export default function DepartmentManager() {
                         setFormData({ name: '', code: '', description: '' });
                         setShowModal(true);
                     }}
-                    className="btn-primary"
+                    className="inline-flex justify-center items-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                 >
                     Add Department
                 </button>
@@ -94,7 +94,7 @@ export default function DepartmentManager() {
             {/* Departments Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {departments.map((dept) => (
-                    <div key={dept.id} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div key={dept.id} className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex items-center space-x-3">
                                 <div className="p-2 bg-primary-100 rounded-lg">
@@ -156,7 +156,7 @@ export default function DepartmentManager() {
             {/* Add/Edit Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg max-w-md w-full p-6">
+                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-200 dark:border-gray-700">
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                             {editingDept ? 'Edit Department' : 'Add Department'}
                         </h3>
@@ -169,7 +169,7 @@ export default function DepartmentManager() {
                                     type="text"
                                     value={formData.name}
                                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                                    className="input-field"
+                                    className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                     required
                                 />
                             </div>
@@ -181,7 +181,7 @@ export default function DepartmentManager() {
                                     type="text"
                                     value={formData.code}
                                     onChange={(e) => setFormData({...formData, code: e.target.value})}
-                                    className="input-field"
+                                    className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                     required
                                 />
                             </div>
@@ -192,12 +192,12 @@ export default function DepartmentManager() {
                                 <textarea
                                     value={formData.description}
                                     onChange={(e) => setFormData({...formData, description: e.target.value})}
-                                    className="input-field"
+                                    className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                     rows="3"
                                 />
                             </div>
                             <div className="flex space-x-3 pt-4">
-                                <button type="submit" className="btn-primary flex-1">
+                                <button type="submit" className="flex-1 inline-flex justify-center items-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
                                     {editingDept ? 'Update' : 'Create'}
                                 </button>
                                 <button
@@ -206,7 +206,7 @@ export default function DepartmentManager() {
                                         setShowModal(false);
                                         setEditingDept(null);
                                     }}
-                                    className="btn-secondary flex-1"
+                                    className="flex-1 inline-flex justify-center items-center px-4 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-xl shadow-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                                 >
                                     Cancel
                                 </button>

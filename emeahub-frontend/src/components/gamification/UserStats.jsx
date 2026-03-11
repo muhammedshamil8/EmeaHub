@@ -41,8 +41,7 @@ export default function UserStats({ stats }) {
 
     return (
         <div className="space-y-6">
-            {/* Rank and Badge */}
-            <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-lg p-6 text-white">
+            <div className="bg-gradient-to-br from-primary-600 via-primary-500 to-purple-600 rounded-2xl p-8 text-white shadow-xl shadow-primary-500/20 relative overflow-hidden backdrop-blur-lg">
                 <div className="flex items-center justify-between">
                     <div>
                         <p className="text-sm opacity-90 mb-1">Your Rank</p>
@@ -60,7 +59,7 @@ export default function UserStats({ stats }) {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {statCards.map((card) => (
-                    <div key={card.title} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div key={card.title} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
                         <div className="flex items-center justify-between mb-4">
                             <div className={`p-2 rounded-lg ${card.color}`}>
                                 <card.icon className="h-6 w-6" />

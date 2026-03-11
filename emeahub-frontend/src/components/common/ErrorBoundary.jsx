@@ -31,13 +31,13 @@ class ErrorBoundary extends React.Component {
                         <div className="mt-6 space-x-4">
                             <button
                                 onClick={() => window.location.reload()}
-                                className="btn-primary"
+                                className="inline-flex justify-center items-center px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                             >
                                 Refresh Page
                             </button>
                             <Link
                                 to="/"
-                                className="btn-secondary"
+                                className="inline-flex justify-center items-center px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-xl shadow-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                             >
                                 Go Home
                             </Link>

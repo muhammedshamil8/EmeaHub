@@ -71,7 +71,7 @@ export default function TeacherStats() {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {summaryCards.map((card) => (
-                    <div key={card.title} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                    <div key={card.title} className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group">
                         <div className="flex items-center justify-between mb-4">
                             <div className={`p-2 rounded-lg ${card.color}`}>
                                 <card.icon className="h-6 w-6" />
@@ -94,7 +94,7 @@ export default function TeacherStats() {
             {/* Detailed Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Verification Stats */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                         Verification Stats
                     </h3>
@@ -122,13 +122,13 @@ export default function TeacherStats() {
                             </div>
                         </div>
                         <div className="grid grid-cols-2 gap-4 pt-4">
-                            <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                                 <div className="text-xl font-bold text-green-600">
                                     {stats.verified_count}
                                 </div>
                                 <div className="text-xs text-gray-600 dark:text-gray-400">Verified</div>
                             </div>
-                            <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                                 <div className="text-xl font-bold text-red-600">
                                     {stats.rejected_count}
                                 </div>
@@ -139,19 +139,19 @@ export default function TeacherStats() {
                 </div>
 
                 {/* Upload Stats */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                         Upload Stats
                     </h3>
                     <div className="space-y-4">
                         <div className="grid grid-cols-2 gap-4">
-                            <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                                 <div className="text-xl font-bold text-blue-600">
                                     {stats.total_uploads}
                                 </div>
                                 <div className="text-xs text-gray-600 dark:text-gray-400">Total</div>
                             </div>
-                            <div className="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                            <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
                                 <div className="text-xl font-bold text-purple-600">
                                     {stats.active_uploads}
                                 </div>

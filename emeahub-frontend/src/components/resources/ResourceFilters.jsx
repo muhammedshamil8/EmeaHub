@@ -77,12 +77,12 @@ export default function ResourceFilters({ filters, onFilterChange }) {
                         placeholder="Search resources..."
                         value={localSearch}
                         onChange={(e) => setLocalSearch(e.target.value)}
-                        className="input-field pl-10"
+                        className="w-full px-4 py-3 pl-10 bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                     />
                 </div>
                 <button
                     onClick={() => setShowFilters(!showFilters)}
-                    className="btn-secondary flex items-center space-x-2"
+                    className="inline-flex items-center justify-center px-4 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 space-x-2"
                 >
                     <FunnelIcon className="h-5 w-5" />
                     <span>Filters</span>
@@ -101,7 +101,7 @@ export default function ResourceFilters({ filters, onFilterChange }) {
                             <select
                                 value={filters.type}
                                 onChange={(e) => onFilterChange({ type: e.target.value })}
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             >
                                 {resourceTypes.map(type => (
                                     <option key={type.value} value={type.value}>
@@ -122,7 +122,7 @@ export default function ResourceFilters({ filters, onFilterChange }) {
                                     department: e.target.value,
                                     subject: '' // Reset subject when department changes
                                 })}
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             >
                                 <option value="">All Departments</option>
                                 {departments.map(dept => (
@@ -144,7 +144,7 @@ export default function ResourceFilters({ filters, onFilterChange }) {
                                     semester: e.target.value,
                                     subject: '' // Reset subject when semester changes
                                 })}
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             >
                                 <option value="">All Semesters</option>
                                 {semesters.map(sem => (
@@ -164,7 +164,7 @@ export default function ResourceFilters({ filters, onFilterChange }) {
                                 <select
                                     value={filters.subject}
                                     onChange={(e) => onFilterChange({ subject: e.target.value })}
-                                    className="input-field"
+                                    className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 >
                                     <option value="">All Subjects</option>
                                     {subjects.map(subj => (
@@ -184,7 +184,7 @@ export default function ResourceFilters({ filters, onFilterChange }) {
                             <select
                                 value={filters.sort}
                                 onChange={(e) => onFilterChange({ sort: e.target.value })}
-                                className="input-field"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             >
                                 {sortOptions.map(option => (
                                     <option key={option.value} value={option.value}>

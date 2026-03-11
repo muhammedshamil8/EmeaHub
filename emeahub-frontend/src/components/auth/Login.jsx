@@ -41,8 +41,8 @@ export default function Login() {
     };
 
     return (
-        <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
+        <div className="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary-50 via-white to-white dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+            <div className="max-w-md w-full space-y-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700/50">
                 <div>
                     <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white">
                         Welcome Back
@@ -61,7 +61,7 @@ export default function Login() {
                             <input
                                 {...register('email')}
                                 type="email"
-                                className="input-field w-full"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 placeholder="you@example.com"
                             />
                             {errors.email && (
@@ -76,7 +76,7 @@ export default function Login() {
                             <input
                                 {...register('password')}
                                 type="password"
-                                className="input-field w-full"
+                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                                 placeholder="••••••••"
                             />
                             {errors.password && (
@@ -99,7 +99,7 @@ export default function Login() {
                         </div>
 
                         <div className="text-sm">
-                            <a href="#" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                            <a href="#" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
                                 Forgot password?
                             </a>
                         </div>
@@ -109,7 +109,7 @@ export default function Login() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn-primary w-full flex justify-center items-center"
+                            className="w-full inline-flex justify-center items-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? <LoadingSpinner size="sm" /> : 'Sign in'}
                         </button>
@@ -118,13 +118,13 @@ export default function Login() {
                     <div className="text-center">
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             Don't have an account?{' '}
-                            <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                            <Link to="/register" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
                                 Sign up
                             </Link>
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                             Are you a teacher?{' '}
-                            <Link to="/register/teacher" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                            <Link to="/register/teacher" className="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 transition-colors">
                                 Register here
                             </Link>
                         </p>

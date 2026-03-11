@@ -64,13 +64,13 @@ export default function AISearch() {
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyPress={handleKeyPress}
                         placeholder="e.g., 'Show me data structures notes for semester 3' or 'Find previous year questions for DBMS'"
-                        className="input-field pl-12 pr-24 py-4 text-lg"
+                        className="w-full px-4 py-4 pl-12 pr-24 text-lg bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 shadow-sm transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                     />
                     <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <button
                         onClick={handleSearch}
                         disabled={loading || !query.trim()}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 btn-primary px-4 py-2"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 inline-flex justify-center items-center px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? <LoadingSpinner size="sm" /> : 'Search'}
                     </button>

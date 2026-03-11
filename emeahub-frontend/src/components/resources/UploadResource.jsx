@@ -99,6 +99,7 @@ export default function UploadResource() {
                     formData.append(key, data[key]);
                 }
             });
+            console.log(formData);
 
             await resourceService.uploadResource(formData);
             toast.success('Resource uploaded successfully! Pending verification.');
@@ -127,7 +128,7 @@ export default function UploadResource() {
                         <input
                             {...register('title')}
                             type="text"
-                            className="input-field"
+                            className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             placeholder="e.g., Data Structures Complete Notes"
                         />
                         {errors.title && (
@@ -143,7 +144,7 @@ export default function UploadResource() {
                         <textarea
                             {...register('description')}
                             rows="3"
-                            className="input-field"
+                            className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                             placeholder="Brief description of the resource..."
                         />
                     </div>
@@ -153,7 +154,7 @@ export default function UploadResource() {
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Resource Type *
                         </label>
-                        <select {...register('type')} className="input-field">
+                        <select {...register('type')} className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400">
                             <option value="">Select type</option>
                             <option value="note">Notes</option>
                             <option value="pyq">Previous Year Questions</option>
@@ -171,7 +172,7 @@ export default function UploadResource() {
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Department *
                         </label>
-                        <select {...register('department_id')} className="input-field">
+                        <select {...register('department_id')} className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400">
                             <option value="">Select department</option>
                             {departments.map(dept => (
                                 <option key={dept.id} value={dept.id}>{dept.name}</option>
@@ -184,7 +185,7 @@ export default function UploadResource() {
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             Semester *
                         </label>
-                        <select {...register('semester')} className="input-field">
+                        <select {...register('semester')} className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400">
                             <option value="">Select semester</option>
                             {[1,2,3,4,5,6,7,8].map(sem => (
                                 <option key={sem} value={sem}>Semester {sem}</option>
@@ -201,7 +202,7 @@ export default function UploadResource() {
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Subject *
                             </label>
-                            <select {...register('subject_id')} className="input-field">
+                            <select {...register('subject_id')} className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400">
                                 <option value="">Select subject</option>
                                 {subjects.map(subj => (
                                     <option key={subj.id} value={subj.id}>{subj.name}</option>
@@ -219,7 +220,7 @@ export default function UploadResource() {
                             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                 Module (Optional)
                             </label>
-                            <select {...register('module_id')} className="input-field">
+                            <select {...register('module_id')} className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400">
                                 <option value="">Select module</option>
                                 {modules.map(mod => (
                                     <option key={mod.id} value={mod.id}>{mod.name}</option>
@@ -283,7 +284,7 @@ export default function UploadResource() {
                     <button
                         type="submit"
                         disabled={uploading}
-                        className="btn-primary w-full flex justify-center items-center space-x-2"
+                        className="w-full inline-flex justify-center items-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed space-x-2"
                     >
                         {uploading ? (
                             <>
