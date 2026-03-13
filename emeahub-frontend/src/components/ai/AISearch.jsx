@@ -21,10 +21,11 @@ export default function AISearch() {
 
         try {
             const response = await aiService.smartSearch(query);
-            setResults(response.data.results || []);
-            setAiUnderstanding(response.data.ai_understanding);
-            
-            if (response.data.results?.length === 0) {
+            console.log(response);
+            setResults(response.results || []);
+            setAiUnderstanding(response.ai_understanding);
+
+            if (response.results?.length === 0) {
                 toast.info('No resources found. Try a different search.');
             }
         } catch (error) {
@@ -43,37 +44,40 @@ export default function AISearch() {
     return (
         <div className="space-y-6">
             {/* Search Header */}
-            <div className="text-center">
-                <div className="inline-flex p-3 bg-purple-100 rounded-full mb-4">
-                    <SparklesIcon className="h-8 w-8 text-purple-600" />
+            <div className="text-center py-8">
+                <div className="inline-flex p-4 bg-gradient-to-br from-purple-100 to-primary-100 dark:from-purple-900/30 dark:to-primary-900/30 rounded-3xl mb-6 shadow-inner">
+                    <SparklesIcon className="h-10 w-10 text-purple-600 dark:text-purple-400" />
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                <h1 className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 tracking-tight mb-4 drop-shadow-sm">
                     AI-Powered Smart Search
                 </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                    Describe what you're looking for in natural language
+                <p className="text-lg text-gray-600 dark:text-gray-400 font-medium max-w-xl mx-auto">
+                    Describe what you're looking for in natural language, and let EMEAHub AI find the exact resources.
                 </p>
             </div>
 
             {/* Search Input */}
-            <div className="max-w-2xl mx-auto">
-                <div className="relative">
-                    <input
-                        type="text"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        placeholder="e.g., 'Show me data structures notes for semester 3' or 'Find previous year questions for DBMS'"
-                        className="w-full px-4 py-4 pl-12 pr-24 text-lg bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 shadow-sm transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                    />
-                    <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <button
-                        onClick={handleSearch}
-                        disabled={loading || !query.trim()}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 inline-flex justify-center items-center px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {loading ? <LoadingSpinner size="sm" /> : 'Search'}
-                    </button>
+            <div className="max-w-3xl mx-auto px-4 sm:px-0">
+                <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary-400 to-purple-400 rounded-2xl blur-md opacity-25 group-hover:opacity-40 transition duration-500"></div>
+                    <div className="relative bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-700/50 rounded-2xl shadow-xl flex items-center">
+                        <MagnifyingGlassIcon className="absolute left-5 h-6 w-6 text-primary-400/70" />
+                        <input
+                            type="text"
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            onKeyPress={handleKeyPress}
+                            placeholder="e.g., 'Show me data structures notes for semester 3'"
+                            className="w-full pl-14 pr-32 py-5 text-lg bg-transparent border-none focus:outline-none focus:ring-0 text-gray-900 dark:text-white placeholder-gray-400 font-medium"
+                        />
+                        <button
+                            onClick={handleSearch}
+                            disabled={loading || !query.trim()}
+                            className="absolute right-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-bold rounded-xl shadow-md transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {loading ? <LoadingSpinner size="sm" /> : 'Search'}
+                        </button>
+                    </div>
                 </div>
 
                 {/* Example queries */}

@@ -10,9 +10,6 @@ use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    /**
-     * Get admin dashboard stats
-     */
     public function dashboard()
     {
         try {
@@ -31,7 +28,6 @@ class AdminController extends Controller
                 'total_ratings' => \App\Models\Rating::count(),
             ];
 
-            // Recent activity
             $recent = [
                 'new_users' => User::latest()->take(5)->get(['id', 'name', 'email', 'role', 'created_at']),
                 'new_resources' => Resource::with(['uploader', 'subject'])
@@ -65,15 +61,12 @@ class AdminController extends Controller
         }
     }
 
-    /**
-     * Get all teachers (pending and verified)
-     */
+    
     public function getTeachers(Request $request)
     {
         $query = User::where('role', 'teacher')
             ->with('department');
 
-        // Filter by verification status
         if ($request->has('status')) {
             if ($request->status === 'pending') {
                 $query->where('is_verified', false);
@@ -103,9 +96,6 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * Verify a teacher
-     */
     public function verifyTeacher($id)
     {
         try {
@@ -127,9 +117,6 @@ class AdminController extends Controller
         }
     }
 
-    /**
-     * Get all resources with filters
-     */
     public function getResources(Request $request)
     {
         $query = Resource::with(['uploader', 'verifier', 'subject', 'department']);
@@ -183,9 +170,6 @@ class AdminController extends Controller
         ]);
     }
 
-    /**
-     * Toggle resource visibility (hide/show)
-     */
     public function toggleVisibility($id, Request $request)
     {
         try {
@@ -223,9 +207,6 @@ class AdminController extends Controller
         }
     }
 
-    /**
-     * Get all departments with stats
-     */
     public function getDepartmentsWithStats()
     {
         $departments = Department::withCount(['users', 'subjects', 'resources'])
@@ -247,5 +228,140 @@ class AdminController extends Controller
             'success' => true,
             'departments' => $departments
         ]);
+    }
+
+    public function createDepartment(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:departments,name',
+                'code' => 'required|string|max:20|unique:departments,code',
+                'is_active' => 'boolean'
+            ]);
+
+            $department = Department::create([
+                'name' => $validated['name'],
+                'code' => $validated['code'],
+                'is_active' => $request->input('is_active', true)
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Department created successfully',
+                'department' => $department
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create department',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function updateDepartment(Request $request, $id)
+    {
+        try {
+            $department = Department::findOrFail($id);
+
+            $validated = $request->validate([
+                'name' => 'required|string|max:255|unique:departments,name,' . $id,
+                'code' => 'required|string|max:20|unique:departments,code,' . $id,
+                'is_active' => 'boolean'
+            ]);
+
+            $department->update($validated);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Department updated successfully',
+                'department' => $department
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update department',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+  
+    public function deleteDepartment($id)
+    {
+        try {
+            $department = Department::findOrFail($id);
+
+            if ($department->users()->exists() || $department->resources()->exists()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cannot delete department with existing users or resources. Consider deactivating it instead.'
+                ], 422);
+            }
+
+            $department->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Department deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete department',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function analytics(Request $request)
+    {
+        try {
+            $departments = Department::with(['subjects'])->get();
+            
+            $data = $departments->map(function ($dept) {
+                $semesterData = [];
+                for ($sem = 1; $sem <= 8; $sem++) {
+                    $resources = Resource::where('status', 'verified')
+                        ->where('department_id', $dept->id)
+                        ->where('semester', $sem)
+                        ->get();
+                    
+                    $byType = [
+                        'note'      => $resources->where('type', 'note')->count(),
+                        'pyq'       => $resources->where('type', 'pyq')->count(),
+                        'syllabus'  => $resources->where('type', 'syllabus')->count(),
+                        'other'     => $resources->where('type', 'other')->count(),
+                    ];
+                    
+                    $semesterData[] = [
+                        'semester' => $sem,
+                        'total'    => $resources->count(),
+                        'by_type'  => $byType,
+                        'subjects' => $dept->subjects->where('semester', $sem)->count(),
+                    ];
+                }
+                
+                return [
+                    'id'          => $dept->id,
+                    'name'        => $dept->name,
+                    'code'        => $dept->code,
+                    'total'       => Resource::where('status', 'verified')->where('department_id', $dept->id)->count(),
+                    'semesters'   => $semesterData,
+                ];
+            });
+            
+            return response()->json([
+                'success' => true,
+                'analytics' => $data,
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to generate analytics',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
     }
 }

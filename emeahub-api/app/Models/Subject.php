@@ -7,7 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subject extends Model
 {
-    protected $fillable = ['department_id', 'name', 'code', 'semester', 'is_active'];
+    protected $fillable = [
+        'name',
+        'code',
+        'type',
+        'department_id',
+        'semester',
+        'is_active',
+        'syllabus_path'
+    ];
 
     protected $casts = [
         'is_active' => 'boolean'

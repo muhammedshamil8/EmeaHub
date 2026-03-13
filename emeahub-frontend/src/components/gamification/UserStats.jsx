@@ -32,7 +32,7 @@ export default function UserStats({ stats }) {
         },
         {
             title: 'Avg Rating',
-            value: stats.avg_rating.toFixed(1),
+            value: (stats.avg_rating || 0).toFixed(1),
             icon: StarIcon,
             color: 'bg-yellow-100 text-yellow-600',
             change: stats.rating_change

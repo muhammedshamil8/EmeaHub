@@ -16,7 +16,7 @@ export default function AIHistory() {
     const fetchHistory = async () => {
         try {
             const response = await aiService.getChatHistory();
-            setHistory(response.data.history || []);
+            setHistory(response.history || []);
         } catch (error) {
             console.error('Failed to fetch history:', error);
         } finally {

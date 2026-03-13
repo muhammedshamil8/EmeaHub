@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import API from '../../services/api';
 import LoadingSpinner from '../common/LoadingSpinner';
-import { BuildingOfficeIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { BuildingOfficeIcon, PencilIcon, TrashIcon, PlusIcon } from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
 
 export default function DepartmentManager() {
@@ -74,49 +74,51 @@ export default function DepartmentManager() {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Department Management
-                </h1>
+        <div className="space-y-8 animate-in fade-in duration-500">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-2">
+                        Department Management
+                    </h1>
+                    <p className="text-gray-500 font-medium">Manage academic departments and track their overall engagement.</p>
+                </div>
                 <button
                     onClick={() => {
                         setEditingDept(null);
                         setFormData({ name: '', code: '', description: '' });
                         setShowModal(true);
                     }}
-                    className="inline-flex justify-center items-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                    className="group flex items-center gap-3 px-8 py-3.5 bg-primary-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest shadow-xl shadow-primary-500/20 hover:bg-primary-500 hover:-translate-y-1 transition-all"
                 >
-                    Add Department
+                    <PlusIcon className="h-4 w-4" />
+                    Add New Dept
                 </button>
             </div>
 
-            {/* Departments Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Departments List */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {departments.map((dept) => (
-                    <div key={dept.id} className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-all duration-300">
-                        <div className="flex items-start justify-between mb-4">
-                            <div className="flex items-center space-x-3">
-                                <div className="p-2 bg-primary-100 rounded-lg">
-                                    <BuildingOfficeIcon className="h-6 w-6 text-primary-600" />
+                    <div key={dept.id} className="group bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-700/50 hover:-translate-y-2 transition-all duration-500">
+                        <div className="flex items-start justify-between mb-8">
+                            <div className="flex items-center gap-5">
+                                <div className="h-16 w-16 bg-primary-50 dark:bg-primary-900/20 rounded-[1.5rem] flex items-center justify-center text-primary-600 dark:text-primary-400 border border-primary-100 dark:border-primary-800/30">
+                                    <BuildingOfficeIcon className="h-8 w-8" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                                        {dept.name}
-                                    </h3>
-                                    <p className="text-sm text-gray-500">Code: {dept.code}</p>
+                                    <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight mb-1">{dept.name}</h3>
+                                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{dept.code}</span>
                                 </div>
                             </div>
-                            <div className="flex space-x-2">
+                            <div className="flex gap-2">
                                 <button
                                     onClick={() => handleEdit(dept)}
-                                    className="p-1 text-gray-500 hover:text-primary-600"
+                                    className="p-3 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 rounded-2xl hover:bg-primary-600 hover:text-white transition-all shadow-sm border border-gray-100 dark:border-gray-700"
                                 >
                                     <PencilIcon className="h-5 w-5" />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(dept.id)}
-                                    className="p-1 text-gray-500 hover:text-red-600"
+                                    className="p-3 bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 rounded-2xl hover:bg-red-600 hover:text-white transition-all shadow-sm border border-gray-100 dark:border-gray-700"
                                 >
                                     <TrashIcon className="h-5 w-5" />
                                 </button>
@@ -124,29 +126,23 @@ export default function DepartmentManager() {
                         </div>
 
                         {dept.description && (
-                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-8 leading-relaxed line-clamp-2">
                                 {dept.description}
                             </p>
                         )}
 
-                        <div className="grid grid-cols-3 gap-2 text-center pt-4 border-t border-gray-200 dark:border-gray-700">
-                            <div>
-                                <div className="text-lg font-semibold text-primary-600">
-                                    {dept.total_students}
-                                </div>
-                                <div className="text-xs text-gray-500">Students</div>
+                        <div className="grid grid-cols-3 gap-4">
+                            <div className="bg-gray-50/50 dark:bg-gray-900/50 rounded-3xl p-5 border border-gray-100/50 dark:border-gray-800/30 text-center">
+                                <p className="text-2xl font-black text-primary-600 dark:text-primary-400 mb-1">{dept.total_students || 0}</p>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Students</p>
                             </div>
-                            <div>
-                                <div className="text-lg font-semibold text-primary-600">
-                                    {dept.total_teachers}
-                                </div>
-                                <div className="text-xs text-gray-500">Teachers</div>
+                            <div className="bg-gray-50/50 dark:bg-gray-900/50 rounded-3xl p-5 border border-gray-100/50 dark:border-gray-800/30 text-center">
+                                <p className="text-2xl font-black text-indigo-600 dark:text-indigo-400 mb-1">{dept.total_teachers || 0}</p>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Teachers</p>
                             </div>
-                            <div>
-                                <div className="text-lg font-semibold text-primary-600">
-                                    {dept.total_resources}
-                                </div>
-                                <div className="text-xs text-gray-500">Resources</div>
+                            <div className="bg-gray-50/50 dark:bg-gray-900/50 rounded-3xl p-5 border border-gray-100/50 dark:border-gray-800/30 text-center">
+                                <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 mb-1">{dept.total_resources || 0}</p>
+                                <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Files</p>
                             </div>
                         </div>
                     </div>
@@ -155,60 +151,79 @@ export default function DepartmentManager() {
 
             {/* Add/Edit Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-200 dark:border-gray-700">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                            {editingDept ? 'Edit Department' : 'Add Department'}
-                        </h3>
-                        <form onSubmit={handleSubmit} className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Department Name *
-                                </label>
-                                <input
-                                    type="text"
-                                    value={formData.name}
-                                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                                    className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                                    required
-                                />
+                <div className="fixed inset-0 bg-gray-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
+                    <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-2xl max-w-md w-full p-10 border border-gray-200 dark:border-gray-700 transform transition-all animate-in zoom-in-95 duration-300">
+                        <div className="flex items-center gap-4 mb-8">
+                            <div className="h-12 w-12 bg-primary-100 dark:bg-primary-900/30 rounded-2xl flex items-center justify-center text-primary-600 dark:text-primary-400">
+                                <BuildingOfficeIcon className="h-6 w-6" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Department Code *
-                                </label>
-                                <input
-                                    type="text"
-                                    value={formData.code}
-                                    onChange={(e) => setFormData({...formData, code: e.target.value})}
-                                    className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                                    required
-                                />
+                                <h3 className="text-xl font-black text-gray-900 dark:text-white tracking-tight">
+                                    {editingDept ? 'Edit Dept' : 'Add Dept'}
+                                </h3>
+                                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Organization details</p>
                             </div>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div className="grid grid-cols-3 gap-4">
+                                <div className="col-span-2">
+                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">
+                                        Dept Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={formData.name}
+                                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-gray-900/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500/50 text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 transition-all"
+                                        placeholder="Computer Science"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">
+                                        Code
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={formData.code}
+                                        onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                                        className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-gray-900/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500/50 text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 transition-all"
+                                        placeholder="CS"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                <label className="block text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-2 px-1">
                                     Description
                                 </label>
                                 <textarea
                                     value={formData.description}
-                                    onChange={(e) => setFormData({...formData, description: e.target.value})}
-                                    className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                                    rows="3"
+                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                    className="w-full px-5 py-3.5 bg-gray-50/50 dark:bg-gray-900/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500/50 text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 transition-all resize-none"
+                                    rows="4"
+                                    placeholder="Brief description of the department..."
                                 />
                             </div>
-                            <div className="flex space-x-3 pt-4">
-                                <button type="submit" className="flex-1 inline-flex justify-center items-center px-4 py-3 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-                                    {editingDept ? 'Update' : 'Create'}
-                                </button>
+
+                            <div className="flex gap-4 pt-6">
                                 <button
                                     type="button"
                                     onClick={() => {
                                         setShowModal(false);
                                         setEditingDept(null);
                                     }}
-                                    className="flex-1 inline-flex justify-center items-center px-4 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium rounded-xl shadow-md border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                    className="flex-1 px-8 py-4 bg-gray-50 dark:bg-gray-900 text-gray-500 font-black rounded-2xl text-[10px] uppercase tracking-widest hover:bg-gray-100 transition-all shadow-sm"
                                 >
                                     Cancel
+                                </button>
+                                <button
+                                    type="submit"
+                                    className="flex-1 px-8 py-4 bg-primary-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest shadow-xl shadow-primary-500/20 hover:bg-primary-500 transition-all"
+                                >
+                                    {editingDept ? 'Update' : 'Create'}
                                 </button>
                             </div>
                         </form>

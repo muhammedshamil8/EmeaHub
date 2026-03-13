@@ -7,26 +7,32 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function About() {
-    const team = [
-        {
-            name: 'Dr. Sarah Johnson',
-            role: 'Project Lead',
-            bio: 'Associate Professor with 10+ years of experience in educational technology',
-            image: 'https://i.pravatar.cc/150?img=1'
-        },
-        {
-            name: 'Prof. Michael Chen',
-            role: 'Technical Advisor',
-            bio: 'Expert in full-stack development and cloud architecture',
-            image: 'https://i.pravatar.cc/150?img=2'
-        },
-        {
-            name: 'Emily Rodriguez',
-            role: 'UI/UX Designer',
-            bio: 'Passionate about creating intuitive learning experiences',
-            image: 'https://i.pravatar.cc/150?img=3'
-        }
-    ];
+ const team = [
+    {
+        name: 'Shamil',
+        role: 'Full Stack Developer',
+        bio: 'Worked on backend architecture, API development and system integration for EMEAHub.',
+        image: 'https://i.pravatar.cc/150?img=12'
+    },
+    {
+        name: 'Shanil',
+        role: 'Frontend Developer',
+        bio: 'Focused on building responsive UI components and improving user experience across the platform.',
+        image: 'https://i.pravatar.cc/150?img=13'
+    },
+    {
+        name: 'Basil',
+        role: 'Backend Developer',
+        bio: 'Handled database structure, resource management logic and server-side functionality.',
+        image: 'https://i.pravatar.cc/150?img=14'
+    },
+    {
+        name: 'Farha',
+        role: 'UI/UX & Documentation',
+        bio: 'Worked on interface design, usability improvements and project documentation.',
+        image: 'https://i.pravatar.cc/150?img=15'
+    }
+];
 
     const values = [
         {
@@ -52,7 +58,7 @@ export default function About() {
     ];
 
     return (
-        <div className="space-y-24 pb-12">
+           <div className="max-w-4xl mx-auto space-y-10">
             {/* Hero Section */}
             <section className="text-center py-16">
                 <h1 className="text-5xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-6 drop-shadow-sm">
@@ -105,7 +111,7 @@ export default function About() {
                 <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-12">
                     Meet Our Team
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     {team.map((member) => (
                         <div key={member.name} className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 hover:-translate-y-2 transition-transform duration-300 group">
                             <img 

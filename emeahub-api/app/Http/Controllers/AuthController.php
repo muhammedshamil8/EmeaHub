@@ -221,4 +221,51 @@ class AuthController extends Controller
             ], 422);
         }
     }
+    
+    // Update profile
+    public function updateProfile(Request $request)
+    {
+        try {
+            $user = $request->user();
+            
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'department_id' => 'sometimes|exists:departments,id',
+                'semester' => 'sometimes|integer|min:1|max:8'
+            ]);
+
+            $user->update([
+                'name' => $validated['name'],
+                'department_id' => $validated['department_id'] ?? $user->department_id,
+                'semester' => $validated['semester'] ?? $user->semester
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile updated successfully',
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                    'department' => $user->department?->name,
+                    'semester' => $user->semester,
+                    'is_verified' => $user->is_verified,
+                ]
+            ]);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Update failed',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

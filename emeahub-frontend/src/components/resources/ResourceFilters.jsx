@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { MagnifyingGlassIcon, FunnelIcon } from '@heroicons/react/24/outline';
 import { useDebounce } from '../../hooks/useDebounce';
+import CustomSelect from '../common/CustomSelect';
 import API from '../../services/api';
 
 export default function ResourceFilters({ filters, onFilterChange }) {
@@ -17,7 +18,10 @@ export default function ResourceFilters({ filters, onFilterChange }) {
 
     useEffect(() => {
         if (filters.department) {
+            setSubjects([]);
             fetchSubjects(filters.department, filters.semester);
+        } else {
+            setSubjects([]);
         }
     }, [filters.department, filters.semester]);
 
@@ -37,12 +41,13 @@ export default function ResourceFilters({ filters, onFilterChange }) {
     };
 
     const fetchSubjects = async (departmentId, semester) => {
-        if (!departmentId || !semester) return;
+        // Require at minimum a department. Semester filters results further.
+        if (!departmentId) return;
         try {
-            const response = await API.get(`/subjects/by-department`, {
-                params: { department_id: departmentId, semester }
-            });
-            setSubjects(response.data.subjects);
+            const params = { department_id: departmentId };
+            if (semester) params.semester = semester;
+            const response = await API.get(`/subjects/by-department`, { params });
+            setSubjects(response.data.subjects || []);
         } catch (error) {
             console.error('Failed to fetch subjects:', error);
         }
@@ -95,104 +100,78 @@ export default function ResourceFilters({ filters, onFilterChange }) {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* Type Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                                 Resource Type
                             </label>
-                            <select
+                            <CustomSelect
                                 value={filters.type}
-                                onChange={(e) => onFilterChange({ type: e.target.value })}
-                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                            >
-                                {resourceTypes.map(type => (
-                                    <option key={type.value} value={type.value}>
-                                        {type.label}
-                                    </option>
-                                ))}
-                            </select>
+                                onChange={(val) => onFilterChange({ type: val })}
+                                options={resourceTypes}
+                                placeholder="Select type"
+                            />
                         </div>
 
                         {/* Department Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                                 Department
                             </label>
-                            <select
+                            <CustomSelect
                                 value={filters.department}
-                                onChange={(e) => onFilterChange({ 
-                                    department: e.target.value,
-                                    subject: '' // Reset subject when department changes
+                                onChange={(val) => onFilterChange({ 
+                                    department: val,
+                                    subject: ''
                                 })}
-                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                            >
-                                <option value="">All Departments</option>
-                                {departments.map(dept => (
-                                    <option key={dept.id} value={dept.id}>
-                                        {dept.name}
-                                    </option>
-                                ))}
-                            </select>
+                                options={[{ value: '', label: 'All Departments' }, ...departments.map(dept => ({ value: dept.id, label: dept.name }))]}
+                                placeholder="All Departments"
+                            />
                         </div>
 
                         {/* Semester Filter */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                                 Semester
                             </label>
-                            <select
+                            <CustomSelect
                                 value={filters.semester}
-                                onChange={(e) => onFilterChange({ 
-                                    semester: e.target.value,
-                                    subject: '' // Reset subject when semester changes
+                                onChange={(val) => onFilterChange({ 
+                                    semester: val,
+                                    subject: '' 
                                 })}
-                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                            >
-                                <option value="">All Semesters</option>
-                                {semesters.map(sem => (
-                                    <option key={sem} value={sem}>
-                                        Semester {sem}
-                                    </option>
-                                ))}
-                            </select>
+                                options={[{ value: '', label: 'All Semesters' }, ...semesters.map(sem => ({ value: sem, label: `Semester ${sem}` }))]}
+                                placeholder="All Semesters"
+                            />
                         </div>
 
-                        {/* Subject Filter (shown when department and semester selected) */}
-                        {filters.department && filters.semester && (
+                        {/* Subject Filter (shown when department selected AND type is notes/pyq) */}
+                        {filters.department && !['timetable', 'syllabus'].includes(filters.type) && (
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
                                     Subject
                                 </label>
-                                <select
+                                <CustomSelect
                                     value={filters.subject}
-                                    onChange={(e) => onFilterChange({ subject: e.target.value })}
-                                    className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                                >
-                                    <option value="">All Subjects</option>
-                                    {subjects.map(subj => (
-                                        <option key={subj.id} value={subj.id}>
-                                            {subj.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    onChange={(val) => onFilterChange({ subject: val })}
+                                    options={[{ value: '', label: 'All Subjects' }, ...subjects.map(subj => ({ value: subj.id, label: subj.name }))]}
+                                    placeholder="All Subjects"
+                                />
                             </div>
                         )}
 
-                        {/* Sort By */}
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Sort By
-                            </label>
-                            <select
-                                value={filters.sort}
-                                onChange={(e) => onFilterChange({ sort: e.target.value })}
-                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                            >
-                                {sortOptions.map(option => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                        {/* Sort By - Hidden for Timetables and Syllabus */}
+                        {!['timetable', 'syllabus'].includes(filters.type) && (
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+                                    Sort By
+                                </label>
+                                <CustomSelect
+                                    value={filters.sort}
+                                    onChange={(val) => onFilterChange({ sort: val })}
+                                    options={sortOptions}
+                                    placeholder="Sort By"
+                                />
+                            </div>
+                        )}
                     </div>
 
                     {/* Clear Filters Button */}

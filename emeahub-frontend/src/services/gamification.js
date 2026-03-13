@@ -5,6 +5,7 @@ export const gamificationService = {
     getLeaderboard: (type = 'points', page = 1) => 
         API.get('/leaderboard', { params: { type, page } }),
     getAchievements: () => API.get('/achievements'),
+    getPublicProfile: (id) => API.get(`/users/${id}`),
     
     // Authenticated endpoints
     getUserStats: () => API.get('/user/stats'),

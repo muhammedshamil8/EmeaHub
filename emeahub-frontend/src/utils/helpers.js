@@ -56,3 +56,21 @@ export const getBadgeColor = (badge) => {
     };
     return colors[badge] || colors.Newbie;
 };
+
+export const getCoverGradient = (type) => {
+    const gradients = {
+        note: 'from-blue-500 to-cyan-400',
+        pyq: 'from-emerald-500 to-teal-400',
+        syllabus: 'from-fuchsia-500 to-purple-500',
+        timetable: 'from-amber-500 to-orange-400',
+        other: 'from-gray-500 to-slate-400'
+    };
+    return gradients[type] || gradients.other;
+};
+
+export const getSubjectShortCode = (subjectName) => {
+    if (!subjectName) return 'RES';
+    const words = subjectName.split(' ');
+    if (words.length === 1) return subjectName.substring(0, 3).toUpperCase();
+    return (words[0][0] + (words[1] ? words[1][0] : '')).toUpperCase().slice(0, 3);
+};

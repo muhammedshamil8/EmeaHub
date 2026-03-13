@@ -1,5 +1,6 @@
 // src/pages/Resources.jsx
 import { useState, useEffect } from 'react';
+import CustomSelect from '../common/CustomSelect';
 import API from '../services/api';
 
 export default function Resources() {
@@ -20,9 +21,17 @@ export default function Resources() {
         setResources(response.data.data);
     };
 
+    const getPageTitle = () => {
+        if (!filters.type) return "Browse All Resources";
+        const types = { note: "Notes", pyq: "PYQs", syllabus: "Syllabus", timetable: "Timetable", other: "Other" };
+        return `Browse ${types[filters.type] || "Resources"}`;
+    };
+
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-6">Study Resources</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+                {getPageTitle()}
+            </h1>
             
             {/* Filters */}
             <div className="grid grid-cols-3 gap-4 mb-6">
@@ -33,26 +42,23 @@ export default function Resources() {
                     onChange={(e) => setFilters({...filters, search: e.target.value})}
                     className="w-full px-4 py-3 bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
                 />
-                <select
+                <CustomSelect
                     value={filters.type}
-                    onChange={(e) => setFilters({...filters, type: e.target.value})}
-                    className="w-full px-4 py-3 bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                >
-                    <option value="">All Types</option>
-                    <option value="note">Notes</option>
-                    <option value="pyq">PYQs</option>
-                    <option value="syllabus">Syllabus</option>
-                </select>
-                <select
+                    onChange={(val) => setFilters({...filters, type: val})}
+                    options={[
+                        { value: '', label: 'All Types' },
+                        { value: 'note', label: 'Notes' },
+                        { value: 'pyq', label: 'PYQs' },
+                        { value: 'syllabus', label: 'Syllabus' }
+                    ]}
+                    placeholder="All Types"
+                />
+                <CustomSelect
                     value={filters.semester}
-                    onChange={(e) => setFilters({...filters, semester: e.target.value})}
-                    className="w-full px-4 py-3 bg-white dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                >
-                    <option value="">All Semesters</option>
-                    {[1,2,3,4,5,6,7,8].map(sem => (
-                        <option key={sem} value={sem}>Semester {sem}</option>
-                    ))}
-                </select>
+                    onChange={(val) => setFilters({...filters, semester: val})}
+                    options={[{ value: '', label: 'All Semesters' }, ...[1,2,3,4,5,6,7,8].map(sem => ({ value: sem, label: `Semester ${sem}` }))]}
+                    placeholder="All Semesters"
+                />
             </div>
 
             {/* Resources Grid */}

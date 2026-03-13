@@ -33,7 +33,7 @@ export const authService = {
 
     // Update user profile
     updateProfile: async (userData) => {
-        const response = await API.put('/profile', userData);
+        const response = await API.put('/user/profile', userData);
         return response.data;
     },
 

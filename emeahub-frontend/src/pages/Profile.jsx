@@ -1,6 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { formatDate } from '../utils/helpers';
+import CustomSelect from '../components/common/CustomSelect';
+import { gamificationService } from '../services/gamification';
+import API from '../services/api';
+import toast from 'react-hot-toast';
 import { 
     UserIcon, 
     EnvelopeIcon, 
@@ -10,19 +14,61 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function Profile() {
-    const { user } = useAuth();
+    const { user, updateUser } = useAuth();
     const [isEditing, setIsEditing] = useState(false);
+    const [departments, setDepartments] = useState([]);
     const [formData, setFormData] = useState({
         name: user?.name || '',
         email: user?.email || '',
-        department: user?.department || '',
+        department_id: user?.department_id || '',
         semester: user?.semester || ''
     });
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        fetchStats();
+        fetchDepartments();
+    }, []);
+
+    const fetchStats = async () => {
+        try {
+            const response = await gamificationService.getUserStats();
+            setStats(response.data.stats);
+        } catch (error) {
+            console.error("Failed to fetch gamification stats:", error);
+        }
+    };
+
+    const fetchDepartments = async () => {
+        try {
+            const response = await API.get('/departments');
+            setDepartments(response.data.departments);
+        } catch (error) {
+            console.error("Failed to fetch departments:", error);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // API call to update profile
-        setIsEditing(false);
+        setLoading(true);
+        try {
+            const response = await API.put('/user/profile', {
+                name: formData.name,
+                department_id: formData.department_id,
+                semester: formData.semester
+            });
+
+            if (response.data.success) {
+                updateUser(response.data.user);
+                toast.success('Profile updated successfully!');
+                setIsEditing(false);
+            }
+        } catch (error) {
+            toast.error(error.response?.data?.message || 'Failed to update profile');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -97,11 +143,11 @@ export default function Profile() {
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                         Department
                                     </label>
-                                    <input
-                                        type="text"
-                                        value={formData.department}
-                                        onChange={(e) => setFormData({...formData, department: e.target.value})}
-                                        className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
+                                    <CustomSelect
+                                        value={formData.department_id}
+                                        onChange={(val) => setFormData({...formData, department_id: val})}
+                                        options={departments.map(d => ({ value: d.id, label: d.name }))}
+                                        placeholder="Select Department"
                                     />
                                 </div>
                                 
@@ -109,15 +155,12 @@ export default function Profile() {
                                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                                         Semester
                                     </label>
-                                    <select
+                                    <CustomSelect
                                         value={formData.semester}
-                                        onChange={(e) => setFormData({...formData, semester: e.target.value})}
-                                        className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                                    >
-                                        {[1,2,3,4,5,6,7,8].map(sem => (
-                                            <option key={sem} value={sem}>Semester {sem}</option>
-                                        ))}
-                                    </select>
+                                        onChange={(val) => setFormData({...formData, semester: val})}
+                                        options={[1,2,3,4,5,6,7,8].map(sem => ({ value: sem, label: `Semester ${sem}` }))}
+                                        placeholder="Select Semester"
+                                    />
                                 </div>
                             </>
                         )}
@@ -177,7 +220,7 @@ export default function Profile() {
                             <ChartBarIcon className="h-5 w-5 text-gray-400" />
                             <div>
                                 <p className="text-sm text-gray-500">Reputation Points</p>
-                                <p className="text-gray-900 dark:text-white">{user?.reputation_points}</p>
+                                <p className="text-gray-900 dark:text-white">{stats?.total_points || 0}</p>
                             </div>
                         </div>
                     </div>
@@ -210,7 +253,7 @@ export default function Profile() {
                     </div>
                     <div className="text-center p-6 bg-gray-50/50 dark:bg-gray-700/50 rounded-2xl hover:-translate-y-1 transition-transform duration-300">
                         <div className="text-2xl font-bold text-primary-600 dark:text-primary-400">
-                            {user?.reputation_points || 0}
+                            {stats?.total_points || 0}
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">Points</div>
                     </div>

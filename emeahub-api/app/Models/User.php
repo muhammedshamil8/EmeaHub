@@ -68,6 +68,11 @@ public function contributionLogs()
     return $this->hasMany(ContributionLog::class);
 }
 
+public function bookmarks()
+{
+    return $this->belongsToMany(Resource::class, 'bookmarks', 'user_id', 'resource_id')->withTimestamps();
+}
+
 // Add method to update leaderboard
 public function updateLeaderboard()
 {
@@ -75,8 +80,8 @@ public function updateLeaderboard()
         ['user_id' => $this->id],
         [
             'total_points' => $this->reputation_points,
-            'upload_count' => $this->total_uploads,
-            'verification_count' => $this->verifications_count ?? 0,
+            'upload_count' => $this->uploadedResources()->count(),
+            'verification_count' => $this->verifiedResources()->count(),
             'download_count' => $this->downloads()->count(),
             'avg_rating' => $this->uploadedResources()->avg('rating_avg') ?? 0
         ]
@@ -87,6 +92,7 @@ public function updateLeaderboard()
     elseif ($stats->total_points >= 500) $stats->badge = 'Gold';
     elseif ($stats->total_points >= 100) $stats->badge = 'Silver';
     elseif ($stats->total_points >= 50) $stats->badge = 'Bronze';
+    else $stats->badge = 'Newbie';
     
     $stats->save();
     

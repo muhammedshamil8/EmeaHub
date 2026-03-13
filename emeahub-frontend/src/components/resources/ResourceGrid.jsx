@@ -1,4 +1,5 @@
 import ResourceCard from './ResourceCard';
+import { StaggerContainer, StaggerItem } from '../common/MotionContainer';
 
 export default function ResourceGrid({ resources }) {
     if (!resources || resources.length === 0) {
@@ -15,10 +16,12 @@ export default function ResourceGrid({ resources }) {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {resources.map((resource) => (
-                <ResourceCard key={resource.id} resource={resource} />
+                <StaggerItem key={resource.id}>
+                    <ResourceCard resource={resource} />
+                </StaggerItem>
             ))}
-        </div>
+        </StaggerContainer>
     );
 }

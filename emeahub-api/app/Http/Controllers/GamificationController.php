@@ -18,37 +18,55 @@ class GamificationController extends Controller
     {
         $type = $request->get('type', 'points'); // points, uploads, verifications
         
-        $query = Leaderboard::with('user:id,name,email,department_id')
-            ->with('user.department:id,name');
-        
-        switch($type) {
-            case 'uploads':
-                $query->orderBy('upload_count', 'desc');
-                break;
-            case 'verifications':
-                $query->orderBy('verification_count', 'desc');
-                break;
-            default:
-                $query->orderBy('total_points', 'desc');
+        if ($type === 'verifications' || $type === 'uploads') {
+             $query = Leaderboard::with('user.department:id,name');
+             if ($type === 'uploads') {
+                 $query->orderBy('upload_count', 'desc');
+             } else {
+                 $query->orderBy('verification_count', 'desc');
+             }
+             $leaders = $query->paginate(20);
+        } else {
+             // Default: points (use User table to ensure sync)
+             $query = User::where('reputation_points', '>', 0)
+                ->where('role', '!=', 'admin')
+                ->with(['department:id,name', 'leaderboard'])
+                ->orderBy('reputation_points', 'desc');
+             $leaders = $query->paginate(20);
         }
         
-        $leaders = $query->paginate(20);
-        
-        // Add rank numbers
-        $leaders->through(function($item, $key) use ($leaders) {
+        // Add rank numbers and transform
+        $leaders->through(function($item, $key) use ($leaders, $type) {
             $rank = ($leaders->currentPage() - 1) * $leaders->perPage() + $key + 1;
             
-            return [
-                'rank' => $rank,
-                'name' => $item->user->name,
-                'department' => $item->user->department->name ?? 'N/A',
-                'points' => $item->total_points,
-                'uploads' => $item->upload_count,
-                'verifications' => $item->verification_count,
-                'avg_rating' => $item->avg_rating,
-                'badge' => $item->badge,
-                'avatar' => null // Add avatar URL later
-            ];
+            if ($type === 'points') {
+                $user = $item;
+                $stats = $user->leaderboard;
+                return [
+                    'id' => $user->id,
+                    'rank' => $rank,
+                    'name' => $user->name,
+                    'department' => $user->department->name ?? 'N/A',
+                    'points' => $user->reputation_points,
+                    'uploads' => $user->total_uploads,
+                    'verifications' => $stats->verification_count ?? 0,
+                    'avg_rating' => $stats->avg_rating ?? 0,
+                    'badge' => $stats->badge ?? 'Newbie'
+                ];
+            } else {
+                $stats = $item;
+                return [
+                    'id' => $stats->user->id,
+                    'rank' => $rank,
+                    'name' => $stats->user->name,
+                    'department' => $stats->user->department->name ?? 'N/A',
+                    'points' => $stats->total_points,
+                    'uploads' => $stats->upload_count,
+                    'verifications' => $stats->verification_count,
+                    'avg_rating' => $stats->avg_rating,
+                    'badge' => $stats->badge
+                ];
+            }
         });
         
         return response()->json([
@@ -65,15 +83,8 @@ class GamificationController extends Controller
     {
         $user = $request->user();
         
-        // Get or create leaderboard entry
-        $stats = Leaderboard::firstOrCreate(
-            ['user_id' => $user->id],
-            [
-                'total_points' => 0,
-                'upload_count' => 0,
-                'verification_count' => 0
-            ]
-        );
+        // Ensure stats are updated before fetching
+        $stats = $user->updateLeaderboard();
         
         // Get achievements
         $achievements = $user->achievements()->get();
@@ -132,5 +143,188 @@ class GamificationController extends Controller
         if ($points < 500) return ['name' => 'Silver', 'points_needed' => 500 - $points];
         if ($points < 1000) return ['name' => 'Gold', 'points_needed' => 1000 - $points];
         return ['name' => 'Platinum', 'points_needed' => 0];
+    }
+
+    /**
+     * Get isolated user rank
+     */
+    public function myRank(Request $request)
+    {
+        $user = $request->user();
+        $stats = Leaderboard::firstOrCreate(['user_id' => $user->id], ['total_points' => 0]);
+        $rank = Leaderboard::where('total_points', '>', $stats->total_points)->count() + 1;
+        
+        return response()->json([
+            'success' => true,
+            'rank' => $rank,
+            'points' => $stats->total_points,
+            'badge' => $stats->badge
+        ]);
+    }
+
+    /**
+     * Get user's activity log separated
+     */
+    public function myActivity(Request $request)
+    {
+        $user = $request->user();
+        
+        $activity = ContributionLog::where('user_id', $user->id)
+            ->with('resource:id,title')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+            
+        return response()->json([
+            'success' => true,
+            'activity' => $activity
+        ]);
+    }
+
+    /**
+     * Get just the user's unlocked achievements
+     */
+    public function myAchievements(Request $request)
+    {
+        $user = $request->user();
+        
+        return response()->json([
+            'success' => true,
+            'achievements' => $user->achievements()->get()
+        ]);
+    }
+
+    /**
+     * Student specific dashboard
+     */
+    public function studentDashboard(Request $request)
+    {
+        $user = $request->user();
+        $stats = Leaderboard::firstOrCreate(['user_id' => $user->id], ['total_points' => 0]);
+        
+        $recentDownloads = \App\Models\Download::where('user_id', $user->id)
+            ->with(['resource:id,title,type'])
+            ->latest('created_at')
+            ->take(5)
+            ->get();
+            
+        $recentUploads = \App\Models\Resource::where('uploaded_by', $user->id)
+            ->with(['subject:id,name'])
+            ->latest('created_at')
+            ->take(5)
+            ->get();
+            
+        return response()->json([
+            'success' => true,
+            'dashboard' => [
+                'points' => $stats->total_points,
+                'badge' => $stats->badge,
+                'recent_downloads' => $recentDownloads,
+                'recent_uploads' => $recentUploads
+            ]
+        ]);
+    }
+
+    /**
+     * Teacher specific gamification stats
+     */
+    public function teacherStats(Request $request)
+    {
+        $user = $request->user();
+        $stats = Leaderboard::firstOrCreate(['user_id' => $user->id], ['total_points' => 0]);
+        $rank = Leaderboard::where('total_points', '>', $stats->total_points)->count() + 1;
+
+        return response()->json([
+            'success' => true,
+            'stats' => [
+                'rank' => $rank,
+                'total_points' => $stats->total_points,
+                'verifications' => $stats->verification_count,
+                'uploads' => $stats->upload_count,
+                'badge' => $stats->badge
+            ]
+        ]);
+    }
+
+    /**
+     * Teacher contributions log
+     */
+    public function teacherContributions(Request $request)
+    {
+        $user = $request->user();
+        
+        $contributions = ContributionLog::where('user_id', $user->id)
+            ->whereIn('action', ['verify', 'upload'])
+            ->with('resource:id,title')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+            
+        return response()->json([
+            'success' => true,
+            'contributions' => $contributions
+        ]);
+    }
+
+    /**
+     * Admin view of leaderboard
+     */
+    public function adminLeaderboard(Request $request)
+    {
+        $leaders = Leaderboard::with('user:id,name,email,role')
+            ->orderBy('total_points', 'desc')
+            ->paginate(50);
+            
+        return response()->json([
+            'success' => true,
+            'leaderboard' => $leaders
+        ]);
+    }
+
+    /**
+     * Get public profile data for any user
+     */
+    public function publicProfile($id)
+    {
+        $user = User::with(['department:id,name', 'achievements'])
+            ->where('role', '!=', 'admin')
+            ->findOrFail($id);
+            
+        $stats = Leaderboard::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'total_points' => 0,
+                'upload_count' => 0,
+                'verification_count' => 0,
+                'avg_rating' => 0.0,
+                'badge' => 'Newbie'
+            ]
+        );
+        
+        $recentUploads = \App\Models\Resource::where('uploaded_by', $user->id)
+            ->where('status', 'verified')
+            ->with(['subject:id,name'])
+            ->latest()
+            ->take(6)
+            ->get();
+            
+        return response()->json([
+            'success' => true,
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'created_at' => $user->created_at,
+                'department' => $user->department->name ?? 'N/A',
+                'reputation_points' => $user->reputation_points,
+                'total_uploads' => $user->total_uploads,
+                'role' => $user->role
+            ],
+            'stats' => [
+                'total_points' => $stats->total_points,
+                'uploads' => $stats->upload_count,
+                'badge' => $stats->badge,
+                'rank' => Leaderboard::where('total_points', '>', $stats->total_points)->count() + 1
+            ],
+            'achievements' => $user->achievements,
+            'recent_uploads' => $recentUploads
+        ]);
     }
 }

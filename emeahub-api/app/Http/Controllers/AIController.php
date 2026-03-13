@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 class AIController extends Controller
 {
     private $apiKey;
-    
+
     public function __construct()
     {
         $this->apiKey = env('GEMINI_API_KEY');
@@ -30,27 +30,30 @@ class AIController extends Controller
 
             $message = $request->message;
             $user = $request->user();
-            
-            // Build context from user data
+
+            // Build context from user data - handle guest users safely
             $context = [
                 'user_role' => $user?->role ?? 'guest',
-                'department' => $user?->department->name ?? null,
+                'department' => $user?->department?->name ?? null,
                 'semester' => $user?->semester ?? null,
                 'recent_downloads' => $user ? $this->getUserRecentTopics($user) : []
             ];
 
-            // Search for relevant resources first
+            // Search for relevant resources
             $relevantResources = $this->searchResources($message);
-            
+
+            // Build resource availability context (for dept/subject queries)
+            $availabilityContext = $this->buildAvailabilityContext($message);
+
             // Create prompt for Gemini
-            $prompt = $this->buildPrompt($message, $context, $relevantResources);
-            
+            $prompt = $this->buildPrompt($message, $context, $relevantResources, $availabilityContext);
+
             // Call Gemini API
             $response = $this->callGemini($prompt);
-            
-            // Save conversation log (optional)
+
+            // Save conversation log
             $this->logConversation($user, $message, $response, $relevantResources);
-            
+
             return response()->json([
                 'success' => true,
                 'response' => $response,
@@ -73,62 +76,64 @@ class AIController extends Controller
     public function smartSearch(Request $request)
     {
         try {
+
             $request->validate([
-                'query' => 'required|string'
+                "query" => "required|string"
             ]);
 
-            $query = $request->query;
-            
-            // Step 1: Let Gemini understand the query
+            $query = $request->input("query");
+
             $understanding = $this->callGemini(
-                "Extract academic information from this query. Return JSON with: subject, topic, semester, type (note/pyq/etc). Query: $query"
+                "Extract academic information from this query. 
+             Return JSON with: subject, topic, semester, type.
+             Query: $query"
             );
-            
-            // Parse AI response (assuming JSON)
-            $filters = json_decode($understanding, true);
-            
-            // Step 2: Search with filters
-            $resources = Resource::where('status', 'verified')
-                ->where('visibility', 'visible');
-            
-            if (isset($filters['subject'])) {
-                $resources->whereHas('subject', function($q) use ($filters) {
-                    $q->where('name', 'LIKE', "%{$filters['subject']}%");
+
+            $filters = $this->parseAIResponse($understanding);
+
+            $resources = Resource::where("status", "verified")
+                ->where("visibility", "visible");
+
+            if (!empty($filters["subject"])) {
+                $resources->whereHas("subject", function ($q) use ($filters) {
+                    $q->where("name", "LIKE", "%{$filters['subject']}%");
                 });
             }
-            
-            if (isset($filters['semester'])) {
-                $resources->where('semester', $filters['semester']);
+
+            if (!empty($filters["semester"])) {
+                $resources->where("semester", $filters["semester"]);
             }
-            
-            if (isset($filters['type'])) {
-                $resources->where('type', $filters['type']);
+
+            if (!empty($filters["type"])) {
+                $resources->where("type", $filters["type"]);
             }
-            
-            if (isset($filters['topic'])) {
-                $resources->where(function($q) use ($filters) {
-                    $q->where('title', 'LIKE', "%{$filters['topic']}%")
-                      ->orWhere('description', 'LIKE', "%{$filters['topic']}%");
+
+            if (!empty($filters["topic"])) {
+                $resources->where(function ($q) use ($filters) {
+                    $q->where("title", "LIKE", "%{$filters['topic']}%")
+                        ->orWhere("description", "LIKE", "%{$filters['topic']}%");
                 });
             }
-            
-            $results = $resources->with(['subject', 'department'])
-                ->orderBy('rating_avg', 'desc')
+
+            $results = $resources
+                ->with(["subject", "department"])
+                ->orderBy("rating_avg", "desc")
                 ->take(20)
                 ->get();
-            
+
             return response()->json([
-                'success' => true,
-                'ai_understanding' => $filters,
-                'results' => $results,
-                'count' => $results->count()
+                "success" => true,
+                "ai_understanding" => $filters,
+                "results" => $results,
+                "count" => $results->count()
             ]);
 
         } catch (\Exception $e) {
+
             return response()->json([
-                'success' => false,
-                'message' => 'Search failed',
-                'error' => $e->getMessage()
+                "success" => false,
+                "message" => "Search failed",
+                "error" => $e->getMessage()
             ], 500);
         }
     }
@@ -146,19 +151,20 @@ class AIController extends Controller
             ]);
 
             $subject = Subject::with('modules')->find($request->subject_id);
-            
-            $prompt = "Create a study plan for {$subject->name} with " . 
-                     count($subject->modules) . " modules. " .
-                     "Study hours per day: {$request->hours_per_day}. " .
-                     "Exam date: {$request->exam_date}. " .
-                     "Format as JSON with daily schedule.";
-            
+
+            $prompt = "Create a study plan for {$subject->name} with " .
+                count($subject->modules) . " modules. " .
+                "Study hours per day: {$request->hours_per_day}. " .
+                "Exam date: {$request->exam_date}. " .
+                "Format as JSON with daily schedule.";
+
             $plan = $this->callGemini($prompt);
-            
+            $parsedPlan = $this->parseAIResponse($plan);
+
             return response()->json([
                 'success' => true,
                 'subject' => $subject->name,
-                'plan' => json_decode($plan, true)
+                'plan' => $parsedPlan
             ]);
 
         } catch (\Exception $e) {
@@ -171,28 +177,163 @@ class AIController extends Controller
     }
 
     /**
+     * Summarize Topic
+     */
+    public function summarize(Request $request)
+    {
+        try {
+            $request->validate([
+                'topic' => 'required|string',
+                'length' => 'nullable|in:short,medium,long'
+            ]);
+
+            $topic = $request->topic;
+            $length = $request->length ?? 'medium';
+
+            $lengthInstruction = [
+                'short' => 'Provide a brief 3-sentence summary.',
+                'medium' => 'Provide a concise 2-paragraph overview with key points.',
+                'long' => 'Provide a detailed explanation with bullet points and examples.'
+            ][$length];
+
+            $prompt = "You are helping a college student. Summarize the following academic topic: '{$topic}'. {$lengthInstruction} Format the output cleanly.";
+
+            $summary = $this->callGemini($prompt);
+
+            return response()->json([
+                'success' => true,
+                'summary' => $summary
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to summarize topic',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Recommend Resources based on user history
+     */
+    public function recommendResources(Request $request)
+    {
+        try {
+            $user = $request->user();
+            $recent = $this->getUserRecentTopics($user);
+
+            // If we lack history, just suggest highly rated stuff
+            if (empty($recent) || count($recent) === 0) {
+                $resources = Resource::where('status', 'verified')
+                    ->where('visibility', 'visible')
+                    ->with(['subject', 'department'])
+                    ->orderBy('rating_avg', 'desc')
+                    ->take(5)
+                    ->get();
+
+                return response()->json([
+                    'success' => true,
+                    'reasoning' => 'Based on global popularity',
+                    'recommendations' => $resources
+                ]);
+            }
+
+            // For now, return heavily downloaded items in their department if no AI is strictly needed
+            $resources = Resource::where('status', 'verified')
+                ->where('visibility', 'visible')
+                ->where('department_id', $user->department_id)
+                ->with(['subject', 'department'])
+                ->orderBy('rating_avg', 'desc')
+                ->take(5)
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'reasoning' => 'Based on your department and recent activity',
+                'recommendations' => $resources
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to get recommendations',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
      * Helper: Call Gemini API
      */
     private function callGemini($prompt)
     {
-        $response = Http::post("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$this->apiKey}", [
-            'contents' => [
-                [
-                    'parts' => [
-                        ['text' => $prompt]
+        $response = Http::post(
+            "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash-lite:generateContent?key={$this->apiKey}",
+            [
+                "contents" => [
+                    [
+                        "parts" => [
+                            ["text" => $prompt]
+                        ]
                     ]
                 ]
             ]
-        ]);
+        );
 
-        if ($response->successful()) {
-            $data = $response->json();
-            return $data['candidates'][0]['content']['parts'][0]['text'] ?? 'No response';
+        if (!$response->successful()) {
+            throw new \Exception("Gemini API error: " . $response->body());
         }
 
-        throw new \Exception('Gemini API error: ' . $response->body());
+        $data = $response->json();
+
+        if (!isset($data["candidates"][0]["content"]["parts"][0]["text"])) {
+            return "Sorry, I couldn't generate a response.";
+        }
+
+        return $data["candidates"][0]["content"]["parts"][0]["text"];
     }
 
+
+
+
+    public function chatHistory(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json([
+                "success" => false,
+                "message" => "Unauthorized"
+            ], 401);
+        }
+
+        $history = \App\Models\AILog::where("user_id", $user->id)
+            ->latest()
+            ->take(20)
+            ->get();
+
+        return response()->json([
+            "success" => true,
+            "history" => $history
+        ]);
+    }
+
+    public function trendingTopics()
+    {
+        $topics = Resource::select("subject_id")
+            ->selectRaw("count(*) as total")
+            ->groupBy("subject_id")
+            ->orderByDesc("total")
+            ->with("subject")
+            ->take(5)
+            ->get();
+
+        return response()->json([
+            "success" => true,
+            "topics" => $topics
+        ]);
+    }
     /**
      * Helper: Search resources
      */
@@ -200,15 +341,15 @@ class AIController extends Controller
     {
         return Resource::where('status', 'verified')
             ->where('visibility', 'visible')
-            ->where(function($q) use ($query) {
+            ->where(function ($q) use ($query) {
                 $q->where('title', 'LIKE', "%{$query}%")
-                  ->orWhere('description', 'LIKE', "%{$query}%");
+                    ->orWhere('description', 'LIKE', "%{$query}%");
             })
             ->with(['subject', 'department'])
             ->orderBy('rating_avg', 'desc')
             ->take(5)
             ->get()
-            ->map(function($r) {
+            ->map(function ($r) {
                 return [
                     'id' => $r->id,
                     'title' => $r->title,
@@ -225,29 +366,88 @@ class AIController extends Controller
      */
     private function getUserRecentTopics($user)
     {
-        return $user->downloads()
-            ->with('resource.subject');
-            // ->latest()
-            // ->take(5)
-            // ->get()
-            // ->pluck('resource.subject.name')
-            // ->filter()
-            // ->unique()
-            // ->values();
+        if (!$user)
+            return [];
+
+        try {
+            return $user->downloads()
+                ->with('resource.subject')
+                ->latest()
+                ->take(5)
+                ->get()
+                ->pluck('resource.subject.name')
+                ->filter()
+                ->unique()
+                ->values()
+                ->toArray();
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     /**
-     * Helper: Build prompt
+     * Helper: Build prompt with resource availability context
      */
-    private function buildPrompt($message, $context, $resources)
+    private function buildPrompt($message, $context, $resources, $availabilityContext = [])
     {
-        $prompt = "You are EMEAHub AI Assistant, helping students with their academic needs.\n\n";
+        $prompt = "You are EMEAHub AI Assistant, helping students of Calicut University FYUGP program with their academic needs.\n\n";
         $prompt .= "User Context: " . json_encode($context) . "\n\n";
-        $prompt .= "Available Resources: " . json_encode($resources) . "\n\n";
+
+        if (!empty($availabilityContext)) {
+            $prompt .= "Resource Availability in EMEAHub (IMPORTANT - use this to answer if notes/resources exist):\n";
+            $prompt .= json_encode($availabilityContext) . "\n\n";
+        }
+
+        if (!empty($resources)) {
+            $prompt .= "Found Resources on EMEAHub: " . json_encode($resources) . "\n\n";
+        }
+
         $prompt .= "User Question: " . $message . "\n\n";
-        $prompt .= "Provide helpful, accurate academic assistance. If relevant resources exist, mention them.";
-        
+        $prompt .= "Instructions: Provide helpful, accurate academic assistance. ";
+        $prompt .= "If the user asks if notes or resources are available for a subject, use the Resource Availability data to answer accurately.";
+        $prompt .= "If relevant resources exist on EMEAHub, mention them with their titles. ";
+        $prompt .= "Be concise and student-friendly.";
+
         return $prompt;
+    }
+
+    /**
+     * Helper: Build resource availability context for AI
+     */
+    private function buildAvailabilityContext($message)
+    {
+        try {
+            // Extract potential subject names from message
+            $subjects = Subject::with([
+                'resources' => function ($q) {
+                    $q->where('status', 'verified');
+                }
+            ])->get();
+
+            $availability = [];
+            foreach ($subjects as $subject) {
+                $resourceCount = $subject->resources->count();
+                $noteCount = $subject->resources->where('type', 'note')->count();
+                $pyqCount = $subject->resources->where('type', 'pyq')->count();
+
+                // Only include if subject name appears in message or if has resources
+                if ($resourceCount > 0 || stripos($message, $subject->name) !== false) {
+                    $availability[] = [
+                        'subject' => $subject->name,
+                        'code' => $subject->code,
+                        'notes' => $noteCount,
+                        'pyqs' => $pyqCount,
+                        'total' => $resourceCount,
+                        'available' => $resourceCount > 0
+                    ];
+                }
+            }
+
+            return $availability;
+
+        } catch (\Exception $e) {
+            return [];
+        }
     }
 
     /**
@@ -255,8 +455,9 @@ class AIController extends Controller
      */
     private function logConversation($user, $message, $response, $resources)
     {
-        if (!$user) return;
-        
+        if (!$user)
+            return;
+
         try {
             \App\Models\AILog::create([
                 'user_id' => $user->id,
@@ -269,4 +470,36 @@ class AIController extends Controller
             // Silent fail
         }
     }
+    /**
+     * Helper: Parse AI JSON response by stripping markdown blocks
+     */
+    private function parseAIResponse($content)
+    {
+        // Remove markdown code blocks if present
+        $cleaned = preg_replace('/```json\s?|\s?```/', '', $content);
+        $cleaned = trim($cleaned);
+
+        $decoded = json_decode($cleaned, true);
+        return $decoded ?: $content; // Return original if decoding fails
+    }
 }
+
+// Available Gemini models (from your log)
+
+// models/gemini-2.5-flash
+
+// models/gemini-2.5-pro
+
+// models/gemini-2.0-flash
+
+// models/gemini-2.0-flash-001
+
+// models/gemini-2.0-flash-lite-001
+
+// models/gemini-2.0-flash-lite
+
+// models/gemini-2.5-flash-lite
+// generateContent
+// countTokens
+// createCachedContent
+// batchGenerateContent

@@ -2,8 +2,19 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import API from '../../services/api';
 import LoadingSpinner from '../common/LoadingSpinner';
-import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import CustomSelect from '../common/CustomSelect';
+import { 
+    PlusIcon, 
+    TrashIcon, 
+    CalendarDaysIcon,
+    AcademicCapIcon,
+    ClockIcon,
+    BuildingOfficeIcon,
+    ArrowPathIcon,
+    CheckIcon
+} from '@heroicons/react/24/outline';
 import toast from 'react-hot-toast';
+import { getInitials } from '../../utils/helpers';
 
 export default function TimetableManager() {
     const { user } = useAuth();
@@ -130,41 +141,37 @@ export default function TimetableManager() {
 
     if (!selectedDept || !selectedSem) {
         return (
-            <div className="space-y-6">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Manage Timetable
-                </h1>
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Department
-                            </label>
-                            <select
-                                value={selectedDept}
-                                onChange={(e) => setSelectedDept(e.target.value)}
-                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                            >
-                                <option value="">Select Department</option>
-                                {departments.map(dept => (
-                                    <option key={dept.id} value={dept.id}>{dept.name}</option>
-                                ))}
-                            </select>
+            <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div className="relative overflow-hidden rounded-[2.5rem] bg-gray-900 border border-white/10 shadow-2xl p-10 sm:p-12 text-center">
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary-600/30 to-indigo-600/30 backdrop-blur-3xl"></div>
+                    <div className="relative z-10 max-w-2xl mx-auto">
+                        <div className="h-20 w-20 bg-primary-500/20 rounded-3xl flex items-center justify-center text-primary-400 mx-auto mb-8 shadow-inner">
+                            <CalendarDaysIcon className="h-10 w-10 text-white" />
                         </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Semester
-                            </label>
-                            <select
-                                value={selectedSem}
-                                onChange={(e) => setSelectedSem(e.target.value)}
-                                className="w-full px-4 py-3 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                            >
-                                <option value="">Select Semester</option>
-                                {[1,2,3,4,5,6,7,8].map(sem => (
-                                    <option key={sem} value={sem}>Semester {sem}</option>
-                                ))}
-                            </select>
+                        <h1 className="text-4xl sm:text-5xl font-black text-white tracking-tight mb-4">
+                            Class Scheduler
+                        </h1>
+                        <p className="text-gray-300 text-lg font-medium leading-relaxed mb-10">
+                            Configure class timings and subjects for the current semester. Select a department to begin.
+                        </p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto">
+                            <div className="bg-white/5 backdrop-blur-md border border-white/10 p-2 rounded-2xl">
+                                <CustomSelect
+                                    value={selectedDept}
+                                    onChange={(val) => setSelectedDept(val)}
+                                    options={departments.map(dept => ({ value: dept.id, label: dept.name }))}
+                                    placeholder="Select Department"
+                                />
+                            </div>
+                            <div className="bg-white/5 backdrop-blur-md border border-white/10 p-2 rounded-2xl">
+                                <CustomSelect
+                                    value={selectedSem}
+                                    onChange={(val) => setSelectedSem(val)}
+                                    options={[1,2,3,4,5,6,7,8].map(sem => ({ value: sem, label: `Semester ${sem}` }))}
+                                    placeholder="Select Semester"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -175,68 +182,91 @@ export default function TimetableManager() {
     if (loading) return <LoadingSpinner />;
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                    Manage Timetable
-                </h1>
-                <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="inline-flex justify-center items-center px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-500 hover:to-primary-400 text-white font-medium rounded-xl shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                >
-                    {saving ? 'Saving...' : 'Save Timetable'}
-                </button>
+        <div className="space-y-8 animate-in fade-in duration-500">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <div className="flex items-center gap-3 mb-2">
+                        <span className="px-3 py-1 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 text-[10px] font-black uppercase tracking-widest rounded-full border border-primary-200 dark:border-primary-800/50">
+                            Active Session
+                        </span>
+                        <span className="text-gray-400 font-bold text-xs uppercase tracking-widest">
+                            Semester {selectedSem}
+                        </span>
+                    </div>
+                    <h1 className="text-3xl font-black text-gray-900 dark:text-white tracking-tight">
+                        Timetable Management
+                    </h1>
+                </div>
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => { setSelectedDept(''); setSelectedSem(''); }}
+                        className="p-3 bg-white dark:bg-gray-800 text-gray-500 border border-gray-100 dark:border-gray-700 rounded-2xl hover:bg-gray-50 dark:hover:bg-gray-700 shadow-sm"
+                        title="Change Department"
+                    >
+                        <ArrowPathIcon className="h-6 w-6" />
+                    </button>
+                    <button
+                        onClick={handleSave}
+                        disabled={saving}
+                        className="px-8 py-3.5 bg-primary-600 text-white font-black rounded-2xl text-[10px] uppercase tracking-widest shadow-xl shadow-primary-500/20 hover:bg-primary-500 hover:-translate-y-1 transition-all disabled:opacity-50"
+                    >
+                        {saving ? 'Syncing...' : 'Save Configuration'}
+                    </button>
+                </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] shadow-2xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-700/50 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead className="bg-gray-50 dark:bg-gray-900">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                    Day / Time
+                    <table className="min-w-full border-collapse">
+                        <thead>
+                            <tr className="bg-gray-50/50 dark:bg-gray-900/50">
+                                <th className="px-8 py-6 text-left border-b border-gray-100 dark:border-gray-700/50">
+                                    <div className="flex items-center gap-2">
+                                        <ClockIcon className="h-5 w-5 text-gray-400 transition-colors group-hover:text-primary-600" />
+                                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Timeline</span>
+                                    </div>
                                 </th>
                                 {timeSlots.map(slot => (
-                                    <th key={slot} className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        {slot}
+                                    <th key={slot} className="px-8 py-6 text-left border-b border-gray-100 dark:border-gray-700/50 min-w-[240px]">
+                                        <div className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">{slot}</div>
                                     </th>
                                 ))}
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody className="divide-y divide-gray-100 dark:divide-gray-700/50">
                             {days.map(day => (
-                                <tr key={day}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white capitalize">
-                                        {day}
+                                <tr key={day} className="hover:bg-gray-50/30 dark:hover:bg-gray-700/20 transition-colors group">
+                                    <td className="px-8 py-8 whitespace-nowrap bg-gray-50/20 dark:bg-gray-900/20 border-r border-gray-100 dark:border-gray-700/50">
+                                        <span className="text-sm font-black text-gray-900 dark:text-white uppercase tracking-widest">
+                                            {day}
+                                        </span>
                                     </td>
                                     {timeSlots.map(slot => {
                                         const entry = entries.find(e => e.day === day && e.time_slot === slot);
                                         const index = entries.findIndex(e => e.day === day && e.time_slot === slot);
                                         
                                         return (
-                                            <td key={`${day}-${slot}`} className="px-6 py-4">
+                                            <td key={`${day}-${slot}`} className="px-4 py-4 xl:px-6">
                                                 {entry && (
-                                                    <div className="space-y-2">
-                                                        <select
+                                                    <div className="space-y-3 bg-white dark:bg-gray-900/50 p-4 rounded-[1.5rem] border border-gray-100 dark:border-gray-700 group-hover:border-primary-500/30 transition-all shadow-sm">
+                                                        <CustomSelect
                                                             value={entry.subject_id}
-                                                            onChange={(e) => handleEntryChange(index, 'subject_id', e.target.value)}
-                                                            className="w-full px-3 py-2 text-sm bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
-                                                        >
-                                                            <option value="">Select Subject</option>
-                                                            {subjects.map(subj => (
-                                                                <option key={subj.id} value={subj.id}>
-                                                                    {subj.name}
-                                                                </option>
-                                                            ))}
-                                                        </select>
-                                                        <input
-                                                            type="text"
-                                                            value={entry.room}
-                                                            onChange={(e) => handleEntryChange(index, 'room', e.target.value)}
-                                                            placeholder="Room"
-                                                            className="w-full px-3 py-2 text-sm bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500 transition-all duration-300 text-gray-900 dark:text-white placeholder-gray-400"
+                                                            onChange={(val) => handleEntryChange(index, 'subject_id', val)}
+                                                            options={subjects.map(subj => ({ value: subj.id, label: subj.name }))}
+                                                            placeholder="Select Subject"
                                                         />
+                                                        <div className="relative">
+                                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                                <BuildingOfficeIcon className="h-3.5 w-3.5 text-gray-400" />
+                                                            </div>
+                                                            <input
+                                                                type="text"
+                                                                value={entry.room}
+                                                                onChange={(e) => handleEntryChange(index, 'room', e.target.value)}
+                                                                placeholder="Room"
+                                                                className="w-full pl-9 pr-4 py-2 text-[11px] font-bold bg-gray-50/50 dark:bg-gray-800/50 border-none rounded-xl focus:ring-1 focus:ring-primary-500 transition-all text-gray-700 dark:text-gray-300 placeholder-gray-400"
+                                                            />
+                                                        </div>
                                                     </div>
                                                 )}
                                             </td>
