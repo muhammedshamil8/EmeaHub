@@ -8,6 +8,7 @@
 
 EMEAHub is a comprehensive role-based academic resource management system designed for FYUGP students. It provides a centralized platform for organizing, verifying, and accessing study materials including notes, previous year questions, syllabi, and timetables.
 
+
 ![EMEAHub Dashboard](banner.png)
 
 ## ✨ Features
