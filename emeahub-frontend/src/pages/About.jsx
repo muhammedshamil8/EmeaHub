@@ -7,6 +7,9 @@ import {
 } from '@heroicons/react/24/outline';
 
 import Shamil from '../assets/shamil.jpg';
+import Shanil from '../assets/shanil.jpg';
+import Basil from '../assets/basil.jpg';
+import Farha from '../assets/farha.jpg';
 
 
 export default function About() {
@@ -18,22 +21,22 @@ export default function About() {
         image: Shamil
     },
     {
-        name: 'Shanil',
+        name: 'Farha',
         role: 'Frontend Developer',
         bio: 'Focused on building responsive UI components and improving user experience across the platform.',
-        image: 'https://i.pravatar.cc/150?img=13'
+        image: Farha
     },
     {
         name: 'Basil',
         role: 'Backend Developer',
         bio: 'Handled database structure, resource management logic and server-side functionality.',
-        image: 'https://i.pravatar.cc/150?img=14'
+        image: Basil
     },
     {
-        name: 'Farha',
+        name: 'Shanil',
         role: 'UI/UX & Documentation',
         bio: 'Worked on interface design, usability improvements and project documentation.',
-        image: 'https://i.pravatar.cc/150?img=15'
+        image: Shanil
     }
 ];
 
