@@ -194,11 +194,11 @@ export default function Home() {
                             <ChatBubbleLeftEllipsisIcon className="w-5 h-5 group-hover:animate-bounce" />
                             <span className="text-xs sm:text-sm font-bold uppercase tracking-tighter">WhatsApp</span>
                         </a>
-                        <a href="https://www.instagram.com/marmelo.cs/" target="_blank className="flex items-center justify-center space-x-1 sm:space-x-2 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl py-3 transition-all hover:scale-105 shadow-lg shadow-pink-600/20 group">
+                        <a href="https://www.instagram.com/marmelo.cs/" target="_blank" className="flex items-center justify-center space-x-1 sm:space-x-2 bg-pink-600 hover:bg-pink-700 text-white rounded-2xl py-3 transition-all hover:scale-105 shadow-lg shadow-pink-600/20 group">
                             <CameraIcon className="w-5 h-5 group-hover:rotate-12 transition-transform" />
                             <span className="text-xs sm:text-sm font-bold uppercase tracking-tighter">Insta</span>
                         </a>
-                        <a href="https://telegram.org/" target="_blank className="flex items-center justify-center space-x-1 sm:space-x-2 bg-blue-500 hover:bg-blue-600 text-white rounded-2xl py-3 transition-all hover:scale-105 shadow-lg shadow-blue-500/20 group">
+                        <a href="https://telegram.org/" target="_blank" className="flex items-center justify-center space-x-1 sm:space-x-2 bg-blue-500 hover:bg-blue-600 text-white rounded-2xl py-3 transition-all hover:scale-105 shadow-lg shadow-blue-500/20 group">
                             <PaperAirplaneIcon className="w-5 h-5 -rotate-45 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                             <span className="text-xs sm:text-sm font-bold uppercase tracking-tighter">Telegram</span>
                         </a>
