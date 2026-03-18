@@ -6,13 +6,16 @@ import {
     UsersIcon 
 } from '@heroicons/react/24/outline';
 
+import Shamil from '../assets/shamil.jpg';
+
+
 export default function About() {
  const team = [
     {
         name: 'Shamil',
         role: 'Full Stack Developer',
         bio: 'Worked on backend architecture, API development and system integration for EMEAHub.',
-        image: 'https://i.pravatar.cc/150?img=12'
+        image: Shamil
     },
     {
         name: 'Shanil',
