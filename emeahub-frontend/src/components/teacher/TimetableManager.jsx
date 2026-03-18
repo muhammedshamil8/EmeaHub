@@ -142,7 +142,7 @@ export default function TimetableManager() {
     if (!selectedDept || !selectedSem) {
         return (
             <div className="space-y-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
-                <div className="relative overflow-hidden rounded-[2.5rem] bg-gray-900 border border-white/10 shadow-2xl p-10 sm:p-12 text-center">
+                <div className="relative overflow rounded-[2.5rem] bg-gray-900 border border-white/10 shadow-2xl p-10 sm:p-12 text-center">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary-600/30 to-indigo-600/30 backdrop-blur-3xl"></div>
                     <div className="relative z-10 max-w-2xl mx-auto">
                         <div className="h-20 w-20 bg-primary-500/20 rounded-3xl flex items-center justify-center text-primary-400 mx-auto mb-8 shadow-inner">
