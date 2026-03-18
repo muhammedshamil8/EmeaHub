@@ -57,7 +57,7 @@ export default function StudyPlanner() {
             setPlan(response.data.plan);
             toast.success('Study plan generated!');
         } catch (error) {
-            toast.error('Failed to generate study plan');
+            toast.error("You've reached your free usage limit. Try again later.");
         } finally {
             setGenerating(false);
         }
