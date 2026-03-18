@@ -75,7 +75,7 @@ export default function AIChat() {
             toast.error('Failed to get response from AI');
             setMessages(prev => [...prev, {
                 role: 'assistant',
-                content: 'Sorry, I encountered an error. Please try again.'
+                content: "You've reached your free usage limit. Please try again later."
             }]);
         } finally {
             setLoading(false);
