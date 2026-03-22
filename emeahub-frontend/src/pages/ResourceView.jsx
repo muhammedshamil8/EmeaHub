@@ -292,7 +292,7 @@ export default function ResourceView() {
                                 </div>
                                 <div className="w-full h-[600px] rounded-2xl overflow-hidden bg-gray-900 flex items-center justify-center">
                                     <object 
-                                        data={STORAGE_URL +resource.file_url} 
+                                        data={STORAGE_URL +resource.download_url} 
                                         type="application/pdf" 
                                         width="100%" 
                                         height="100%"
