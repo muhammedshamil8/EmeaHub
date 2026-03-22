@@ -276,6 +276,7 @@ export default function ResourceView() {
                     </FadeIn>
 
                     {/* PDF Previewer */}
+                    {console.log(resource)}
                     {isViewing && resource.download_url && (
                         <FadeIn>
                             <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] p-4 sm:p-6 border border-gray-100 dark:border-gray-700 shadow-2xl">
