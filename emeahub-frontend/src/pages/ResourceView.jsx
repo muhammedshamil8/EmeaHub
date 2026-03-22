@@ -276,7 +276,7 @@ export default function ResourceView() {
                     </FadeIn>
 
                     {/* PDF Previewer */}
-                    {isViewing && resource.file_url && (
+                    {isViewing && resource.download_url && (
                         <FadeIn>
                             <div className="bg-white dark:bg-gray-800 rounded-[2.5rem] p-4 sm:p-6 border border-gray-100 dark:border-gray-700 shadow-2xl">
                                 <div className="flex items-center justify-between mb-4 px-2">
@@ -292,7 +292,7 @@ export default function ResourceView() {
                                 </div>
                                 <div className="w-full h-[600px] rounded-2xl overflow-hidden bg-gray-900 flex items-center justify-center">
                                     <object 
-                                        data={STORAGE_URL +resource.download_url} 
+                                        data={STORAGE_URL + resource.download_url} 
                                         type="application/pdf" 
                                         width="100%" 
                                         height="100%"
